@@ -63,8 +63,8 @@
 % ---------------------------------------------------------------
 % INFORMAÇÕES DO DOCUMENTO
 % ---------------------------------------------------------------
-\titulo{Título do Trabalho de Conclusão de Curso}
-\autor{Nome Completo do Aluno}
+\titulo{Análise de sensibilidade de um RNN para previsão de estoque hospitalar crítico}
+\autor{Gabriel Brandão Vechani de Freitas}
 \local{São Paulo}
 \data{2025}
 \orientador{Prof. Nome do Orientador}
@@ -75,12 +75,12 @@
   \par
   Unidade Santo Amaro
   \par
-  Curso de [Nome do Curso]
+  Curso de Ciência da Computação
 }
 
 \tipotrabalho{Trabalho de Conclusão de Curso I}
 
-\preambulo{Proposta de Trabalho de Conclusão de Curso apresentado ao SENAC Santo Amaro como requisito parcial para aprovação na disciplina de TCC1 do curso de [Nome do Curso].}
+\preambulo{Proposta de Trabalho de Conclusão de Curso apresentado ao SENAC Santo Amaro como requisito parcial para aprovação na disciplina de TCC1 do curso de Ciência da Computação.}
 
 % ---------------------------------------------------------------
 % COMPILA O ÍNDICE
@@ -117,12 +117,12 @@
 % RESUMO
 % ---------------------------------------------------------------
 \begin{resumo}
-Este documento apresenta a proposta inicial do Trabalho de Conclusão de Curso (TCC1) desenvolvido no SENAC Santo Amaro. O objetivo deste trabalho é [descrever brevemente o objetivo principal do TCC]. A justificativa para este estudo baseia-se em [descrever brevemente a justificativa]. A revisão bibliográfica abrange [mencionar os principais tópicos]. Como solução proposta, pretende-se [descrever brevemente a solução]. Este trabalho está organizado em três capítulos que apresentam a introdução ao tema, a revisão bibliográfica que fundamenta a pesquisa, o desenvolvimento com a solução proposta e o cronograma de trabalho, seguidos das referências bibliográficas.
+Este documento apresenta a proposta inicial do Trabalho de Conclusão de Curso (TCC1) desenvolvido no SENAC Santo Amaro. O objetivo deste trabalho é analisar como uma RNN pode auxiliar no planejamento de estoque hopitalares com foco em itens críticos. A justificativa para este estudo baseia-se na importância do planejamento e gestão eficiente de estoques hospitalares, no que refere se a insumos crítico, e como a falta deles podem comprometer o atendimento do paciente. A revisão bibliográfica abrange (RNNs), sensibilidade de modelos de machine learning, previsão de serie temporal e gestão de estoque. Como solução proposta, pretende-se Desenvolver um modelo baseado em RNN para previsão de demanda de itens hospitalares críticos, fazendo uso de dados reais de uma base pública, junto à uma análise de sensibilidade apara avaliar como mudança variáveis e paramêtros afetam o modelo. Este trabalho está organizado em três capítulos que apresentam a introdução ao tema, a revisão bibliográfica que fundamenta a pesquisa, o desenvolvimento com a solução proposta e o cronograma de trabalho, seguidos das referências bibliográficas.
 
 \vspace{\onelineskip}
 
 \noindent
-\textbf{Palavras-chave}: palavra1. palavra2. palavra3. palavra4. palavra5.
+\textbf{Palavras-chave}: redes neurais recorentes (RNNs).
 \end{resumo}
 
 % ---------------------------------------------------------------
@@ -157,16 +157,24 @@ Este documento apresenta a proposta inicial do Trabalho de Conclusão de Curso (
 \chapter{Introdução}
 \label{cap:introducao}
 
-A introdução deve apresentar o tema do trabalho de forma clara e objetiva, situando o leitor no contexto da pesquisa. Neste capítulo, são apresentados o contexto no qual o problema se insere, a justificativa para a realização do estudo e os objetivos que norteiam o desenvolvimento do trabalho.
+%A introdução deve apresentar o tema do trabalho de forma clara e objetiva, situando o leitor no contexto da pesquisa. Neste capítulo, são apresentados o contexto no qual o problema se insere, a justificativa para a realização do estudo e os objetivos que norteiam o desenvolvimento do trabalho.
+O gerenciamento de estoques é de grande importância para garantir a qualidade e a eficiência do atendimento ao paciente. Por isso, é essencial ter uma boa disponibilidade de insumos, especialmente os que afetam a vitalidade do paciente. Esses insumos devem ter uma maior priorização no momento do planejamento do estoque.  
 
+Com o aumento da complexidade dos sistemas de saúde e da demanda por insumos hospitalares, o planejamento de estoques se torna um desafio. Por isso, o uso de técnicas de previsão de demanda baseadas em aprendizado de máquina, como RNNs, tem se mostrado promissor no que diz respeito à manipulação de dados temporais.
+
+Tendo isso em vista, este trabalho propõe analisar a aplicação de um RNN na previsão da demanda de itens críticos hospitalares, dando ênfase à análise da sensibilidade do modelo a variações de parâmetros de condições. O objetivo é entender como esse método pode contribuir para aumentar e melhorar a eficiência do planejamento de estoques, reduzindo excesso de insumos e riscos de fatalidade por falta.
 % ---------------------------------------------------------------
 \section{Contexto}
 \label{sec:contexto}
 
-Apresente o cenário que originou o problema, ressaltando fatos, indicadores e lacunas identificadas na área de estudo. O contexto deve situar o leitor sobre o estado atual do tema, mostrando a relevância do assunto para a Computação e para a sociedade.
+%Apresente o cenário que originou o problema, ressaltando fatos, indicadores e lacunas identificadas na área de estudo. O contexto deve situar o leitor sobre o estado atual do tema, mostrando a relevância do assunto para a Computação e para a sociedade.
+%Descreva o ambiente ou domínio em que o problema ocorre, utilizando dados e referências que comprovem a existência do problema. Explique quem são os principais afetados e quais são as consequências de não resolvê-lo.
 
-Descreva o ambiente ou domínio em que o problema ocorre, utilizando dados e referências que comprovem a existência do problema. Explique quem são os principais afetados e quais são as consequências de não resolvê-lo.
+Os principais desafios para a gestão de estoque são as variações sazonais, as emergências sanitárias e as mudanças no perfil epidemiológico da população. A falta de material pode afetar diretamente a saúde do paciente, ao passo que o excesso pode causar desperdícios, dado que muitos materiais têm um prazo de validade limitado.
 
+Os itens críticos hospitalares, como os medicamentos essenciais, os materiais cirúrgicos e os consumíveis de suporte à vida, exigem um elevado nível de controlo, pois a sua indisponibilidade pode levar à interrupção de procedimentos, ao aumento do tempo de internamento ou até a riscos para a vida dos pacientes. Apesar da importância destes itens, muitos sistemas de gestão continuam a utilizar métodos tradicionais de previsão, como médias históricas ou modelos estatísticos simples, que nem sempre conseguem capturar os padrões complexos e dinâmicos da procura.
+
+As RNN têm vasta capacidade para lidar com séries temporais, aprendendo dependências temporais e melhorando a precisão das previsões. No entanto, no contexto hospitalar, a sua utilização com este objetivo não está muito difundida, principalmente na análise de sensibilidade aos parâmetros.
 \vspace{0.3cm}
 \noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule}{%
 \textbf{Orientação sobre citações (ABNT NBR 10520:2023)}
@@ -205,16 +213,23 @@ A revisão bibliográfica não consiste em simplesmente listar os trabalhos enco
 \section{Justificativa}
 \label{sec:justificativa}
 
-Explicite por que resolver esse problema é importante. A justificativa deve abordar:
+%Explicite por que resolver esse problema é importante. A justificativa deve abordar:
 
-\begin{itemize}
-    \item \textbf{Relevância acadêmica}: como este trabalho contribui para o avanço do conhecimento na área;
-    \item \textbf{Relevância prática/profissional}: quais benefícios práticos a solução trará para usuários, organizações ou a sociedade;
-    \item \textbf{Lacuna identificada}: o que ainda não foi resolvido ou explorado suficientemente pelos trabalhos existentes.
-\end{itemize}
+%\begin{itemize}
+%    \item \textbf{Relevância acadêmica}: como este trabalho contribui para o avanço do conhecimento na área;
+%    \item \textbf{Relevância prática/profissional}: quais benefícios práticos a solução trará para usuários, organizações ou a sociedade;
+%    \item \textbf{Lacuna identificada}: o que ainda não foi resolvido ou explorado suficientemente pelos trabalhos existentes.
+%\end{itemize}
 
-Mostre que o trabalho não é apenas um texto sobre um tema popular, mas sim uma proposta que visa preencher uma lacuna real e contribuir de forma significativa para a área.
+%Mostre que o trabalho não é apenas um texto sobre um tema popular, mas sim uma proposta que visa preencher uma lacuna real e contribuir de forma significativa para a área.
 
+Este trabalho justifica-se pela necessidade de aprimoramento de técnicas e ferramentas de previsão de demanda, assim como de gerenciamento de estoques hospitalares. Tendo em conta a complexidade de uma variabilidade na natureza temporal dos dados, uma abordagem mais robusta e adaptativa, com uso de aprendizado de máquina, pode auxiliar.
+
+No ponto de vista académico, este estudo contribui para o avanço e análise de técnicas de aprendizado de máquina, com foco em redes neurais recorrentes (RNNs), voltado para a área da saúde. Sendo uma área vastamente explorada, ainda existe espaço para estudo e avanço no que se diz respeito a fazer uso dessas técnicas para o âmbito hospitalar.
+
+Sob o ponto de vista profissional, a otimização na previsão da demanda de itens críticos tem efeito significativo para a área de saúde. Podendo auxiliar no gerenciamento de excesso de insumos, gerando uma diminuição de impactos financeiros, e na falta desses insumos, que pode acarretar em má eficiência no atendimento ao paciente, podendo gerar complicações mais severas. Apoiando gestores voltados ao de planejamento a tomarem as melhores definições com ganho de eficiência.
+
+Muitos sistemas ainda utilizam técnicas tradicionais de previsão, as quais não conseguem reconhecer padrões temporais no consumo hospitalar, podendo ser uma lacuna. O uso de RNNs para melhoria nesse fluxo, com ênfase no estudo de sensibilidade às variabilidades dos dados, tais dados sendo de fontes públicas, pode contribuir para o preenchimento desta lacuna existente.
 % ---------------------------------------------------------------
 \section{Objetivo}
 \label{sec:objetivo}
