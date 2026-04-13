@@ -117,12 +117,19 @@
 % RESUMO
 % ---------------------------------------------------------------
 \begin{resumo}
-Este documento apresenta a proposta inicial do Trabalho de Conclusão de Curso (TCC1) desenvolvido no SENAC Santo Amaro. O objetivo deste trabalho é analisar como uma RNN pode auxiliar no planejamento de estoque hopitalares com foco em itens críticos. A justificativa para este estudo baseia-se na importância do planejamento e gestão eficiente de estoques hospitalares, no que refere se a insumos crítico, e como a falta deles podem comprometer o atendimento do paciente. A revisão bibliográfica abrange (RNNs), sensibilidade de modelos de machine learning, previsão de serie temporal e gestão de estoque. Como solução proposta, pretende-se Desenvolver um modelo baseado em RNN para previsão de demanda de itens hospitalares críticos, fazendo uso de dados reais de uma base pública, junto à uma análise de sensibilidade apara avaliar como mudança variáveis e paramêtros afetam o modelo. Este trabalho está organizado em três capítulos que apresentam a introdução ao tema, a revisão bibliográfica que fundamenta a pesquisa, o desenvolvimento com a solução proposta e o cronograma de trabalho, seguidos das referências bibliográficas.
+Este documento apresenta a proposta inicial do Trabalho de Conclusão de Curso (TCC1)
+desenvolvido no SENAC Santo Amaro. O objetivo deste trabalho é [descrever brevemente
+o objetivo principal do TCC]. A justificativa para este estudo baseia-se em [descrever
+brevemente a justificativa]. A revisão bibliográfica abrange [mencionar os principais tópicos].
+Como solução proposta, pretende-se [descrever brevemente a solução]. Este trabalho está
+organizado em três capítulos que apresentam a introdução ao tema, a revisão bibliográfica
+que fundamenta a pesquisa, o desenvolvimento com a solução proposta e o cronograma de
+trabalho, seguidos das referências bibliográficas.
 
 \vspace{\onelineskip}
 
 \noindent
-\textbf{Palavras-chave}: redes neurais recorentes (RNNs).
+\textbf{Palavras-chave}: palavra1. palavra2. palavra3. palavra4. palavra5.
 \end{resumo}
 
 % ---------------------------------------------------------------
@@ -158,11 +165,15 @@ Este documento apresenta a proposta inicial do Trabalho de Conclusão de Curso (
 \label{cap:introducao}
 
 %A introdução deve apresentar o tema do trabalho de forma clara e objetiva, situando o leitor no contexto da pesquisa. Neste capítulo, são apresentados o contexto no qual o problema se insere, a justificativa para a realização do estudo e os objetivos que norteiam o desenvolvimento do trabalho.
-O gerenciamento de estoques é de grande importância para garantir a qualidade e a eficiência do atendimento ao paciente. Por isso, é essencial ter uma boa disponibilidade de insumos, especialmente os que afetam a vitalidade do paciente. Esses insumos devem ter uma maior priorização no momento do planejamento do estoque.  
+O gerenciamento de estoques é de grande importância para garantir a qualidade e a eficiência nos procedimentos hospitalares, tendo bastante destaque para qualidade no atendimento e execução de processos. Para os hospitais, os estoques desempenham um papel fundamental, pois viabilizam a prestação de serviços aos pacientes, e principalmente, para a assistência. Segundo \citeonline{Hiaretto2021}, "Ao realizar os acompanhamentos, controles e monitoramentos de forma lógica e estratégica, o nível de prejuízos e desvios será inferior. Para alcançar este nível na empresa é necessário, principalmente, acompanhamento das rotinas executadas diariamente e auditorias dos processos dos estoques". Uma má gestão da cadeia de abastecimento pode resultar em excesso de insumos, custos fora do orçamento e falta de itens essenciais para o atendimento. Por isso, é essencial administrar e controlar as entradas e saídas de insumos necessários para o atendimento nas instituições, mantendo o funcionamento das operações, mas com foco em menor estoque possível, e é desafiada cotidianamente a manter a previsibilidade de compra e consumo para que não haja desperdícios e nem falta \citeonline{Garcia2012}.
 
-Com o aumento da complexidade dos sistemas de saúde e da demanda por insumos hospitalares, o planejamento de estoques se torna um desafio. Por isso, o uso de técnicas de previsão de demanda baseadas em aprendizado de máquina, como RNNs, tem se mostrado promissor no que diz respeito à manipulação de dados temporais.
+Com o aumento da complexidade dos sistemas de saúde e da demanda por insumos hospitalares, o planeamento de estoques se torna um grande desafio enfrentado pelas instituições de saúde na atualidade, sendo capaz de instituir gargalos nos processos e procedimentos dessas instituições. Em um ambiente em que a escassez de recursos e a pressão assistencial são constantes, em conjunto com a imprevisibilidade da demanda, potencializada por eventos epidemiológicos, sazonalidades e picos de ocupação, a previsibilidade e a precisão operacional deixaram de ser diferenciais e tornaram-se vitais. Para \citeonline{Thiago2025}, é justamente nesse ponto que a Inteligência Artificial (IA) vem assumindo um papel transformador, oferecendo um novo patamar de precisão e eficiência na operação logística hospitalar.
+%Para \citeonline{Rachel2025}, Há muito que estas perturbações no inventário hospitalar são difíceis de prever e de gerir pelos hospitais. Na mesma pesquisa realizada por \citeonline{Rachel2025}, relata  
 
-Tendo isso em vista, este trabalho propõe analisar a aplicação de um RNN na previsão da demanda de itens críticos hospitalares, dando ênfase à análise da sensibilidade do modelo a variações de parâmetros de condições. O objetivo é entender como esse método pode contribuir para aumentar e melhorar a eficiência do planejamento de estoques, reduzindo excesso de insumos e riscos de fatalidade por falta.
+% Tendo isso em vista, este trabalho propõe analisar a aplicação de uma Rede Neural Recorrente (RNN) na previsão da demanda de itens críticos hospitalares, com ênfase na análise de sensibilidade do modelo a variações nos parâmetros e condições de entrada. A escolha por esse tipo de arquitetura se justifica pela sua capacidade inerente de capturar dependências temporais em séries históricas de consumo, característica essencial em ambientes hospitalares, onde a demanda por insumos pode ser influenciada por sazonalidades, surtos epidemiológicos e variações no perfil de atendimento. O objetivo é compreender como esse método pode contribuir para ampliar e aprimorar a eficiência do planejamento de estoques, reduzindo tanto o excesso de insumos — que implica em custos desnecessários e risco de vencimento — quanto os riscos de desabastecimento, que podem comprometer diretamente a qualidade do atendimento e resultar em desfechos clínicos adversos, incluindo fatalidades evitáveis.
+
+Tendo isso como base, este trabalho tem como foco propor analisar a aplicação de uma Rede Neural Recorrente (RNN) na previsão da demanda de itens críticos em estoques hospitalares, com destaque na análise de sensibilidade do modelo de aprendizado de máquina, realizando variações nos parâmetros de entrada. Tendo como escolha de arquitetura a Long Short-Term Memory (LSTM), devido à sua capacidade de aprender dependências de longo prazo em dados sequenciais, com uso de camada de memória. Sendo amplamente aplicável em estoques hospitalares, devido às suas características de demanda por insumos, que podem ser influenciadas por sazonalidades, surtos epidemiológicos e variações no atendimento. O objetivo é compreender se esse tipo de modelo pode contribuir no aprimoramento da eficiência no planejamento de estoques em hospitais, auxiliando na redução de danos tanto por excesso quanto por falta de insumos.
+
 % ---------------------------------------------------------------
 \section{Contexto}
 \label{sec:contexto}
@@ -170,44 +181,47 @@ Tendo isso em vista, este trabalho propõe analisar a aplicação de um RNN na p
 %Apresente o cenário que originou o problema, ressaltando fatos, indicadores e lacunas identificadas na área de estudo. O contexto deve situar o leitor sobre o estado atual do tema, mostrando a relevância do assunto para a Computação e para a sociedade.
 %Descreva o ambiente ou domínio em que o problema ocorre, utilizando dados e referências que comprovem a existência do problema. Explique quem são os principais afetados e quais são as consequências de não resolvê-lo.
 
-Os principais desafios para a gestão de estoque são as variações sazonais, as emergências sanitárias e as mudanças no perfil epidemiológico da população. A falta de material pode afetar diretamente a saúde do paciente, ao passo que o excesso pode causar desperdícios, dado que muitos materiais têm um prazo de validade limitado.
+Os principais desafios para a gestão de estoque são as variações sazonais, as emergências sanitárias e as mudanças no perfil epidemiológico da população, com impactos significativos em como será realizado a previsão de demanda na cadeia de abasteciemnto hospitalar. A falta de material pode afetar diretamente a saúde do paciente, ao passo que o excesso pode causar desperdícios, dado que muitos materiais têm um prazo de validade limitado. O uso de diversos sistemas e metodologias de estoque, irão auxiliar no processo de previsão e abasteciemto de forma eficiente a manter em ordem os procedimentos diarios sem transtornos para as instituições \citeonline{Hiaretto2021}.
+
+Uma abordagem promissora reside na aplicação de técnicas de Deep Learning (DL), que têm demonstrado potencial para otimizar os processos de gestão da cadeia de abastecimento. Alguns estudos têm explorado a utilização de algoritmos de Machine Learning (ML) para resolver problemas de previsão de demanda, apresentando assim alternativas para melhorar a eficiência e a rentabilidade das cadeias de produção farmacêutica e hopitalar \citeonline{Andres2025}. No entanto, a aplicação de redes neurais recorrentes (RNN) para previsão de demanda em estoques hospitalares ainda é um campo pouco explorado, especialmente no que diz respeito à análise de sensibilidade do modelo a variações nos parâmetros de entrada.
 
 Os itens críticos hospitalares, como os medicamentos essenciais, os materiais cirúrgicos e os consumíveis de suporte à vida, exigem um elevado nível de controlo, pois a sua indisponibilidade pode levar à interrupção de procedimentos, ao aumento do tempo de internamento ou até a riscos para a vida dos pacientes. Apesar da importância destes itens, muitos sistemas de gestão continuam a utilizar métodos tradicionais de previsão, como médias históricas ou modelos estatísticos simples, que nem sempre conseguem capturar os padrões complexos e dinâmicos da procura.
 
 As RNN têm vasta capacidade para lidar com séries temporais, aprendendo dependências temporais e melhorando a precisão das previsões. No entanto, no contexto hospitalar, a sua utilização com este objetivo não está muito difundida, principalmente na análise de sensibilidade aos parâmetros.
-\vspace{0.3cm}
-\noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule}{%
-\textbf{Orientação sobre citações (ABNT NBR 10520:2023)}
 
-\vspace{0.2cm}
-O aluno deve \textbf{priorizar citações indiretas} (paráfrases), nas quais a ideia do autor é reescrita com as próprias palavras. Citações diretas (transcrições literais) \textbf{não são recomendadas}, exceto quando o texto original for insubstituível --- por exemplo, definições consagradas, leis, normas técnicas ou trechos cuja reformulação alteraria o sentido.
+% \vspace{0.3cm}
+% \noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule}{%
+% \textbf{Orientação sobre citações (ABNT NBR 10520:2023)}
 
-\vspace{0.2cm}
-\textbf{Citação indireta} (recomendada) --- o autor interpreta e reescreve a ideia:
+% \vspace{0.2cm}
+% O aluno deve \textbf{priorizar citações indiretas} (paráfrases), nas quais a ideia do autor é reescrita com as próprias palavras. Citações diretas (transcrições literais) \textbf{não são recomendadas}, exceto quando o texto original for insubstituível --- por exemplo, definições consagradas, leis, normas técnicas ou trechos cuja reformulação alteraria o sentido.
 
-\vspace{0.1cm}
-\textit{Exemplo 1 --- sistema autor-data entre parênteses:}\\
-A definição clara do problema é considerada um fator determinante para o sucesso de qualquer pesquisa na área de Computação \cite{Wazlawick2020}.
+% \vspace{0.2cm}
+% \textbf{Citação indireta} (recomendada) --- o autor interpreta e reescreve a ideia:
 
-\vspace{0.1cm}
-\textit{Exemplo 2 --- autor como parte do texto:}\\
-Para \citeonline{Pressman2016}, a escolha de uma metodologia adequada impacta diretamente na qualidade dos resultados obtidos em projetos de software.
+% \vspace{0.1cm}
+% \textit{Exemplo 1 --- sistema autor-data entre parênteses:}\\
+% A definição clara do problema é considerada um fator determinante para o sucesso de qualquer pesquisa na área de Computação \cite{Wazlawick2020}.
 
-\vspace{0.2cm}
-\textbf{Citação direta curta} (até 3 linhas, apenas quando indispensável) --- entre aspas, com indicação de página:
+% \vspace{0.1cm}
+% \textit{Exemplo 2 --- autor como parte do texto:}\\
+% Para \citeonline{Pressman2016}, a escolha de uma metodologia adequada impacta diretamente na qualidade dos resultados obtidos em projetos de software.
 
-\vspace{0.1cm}
-Segundo \citeonline[p.~42]{Wazlawick2020}, ``a formulação do problema deve ser expressa de forma clara, objetiva e delimitada, evitando ambiguidades que possam comprometer o escopo da pesquisa''.
+% \vspace{0.2cm}
+% \textbf{Citação direta curta} (até 3 linhas, apenas quando indispensável) --- entre aspas, com indicação de página:
 
-\vspace{0.2cm}
-\textbf{Citação direta longa} (mais de 3 linhas, apenas quando indispensável) --- recuo de 4\,cm, fonte menor, sem aspas:
+% \vspace{0.1cm}
+% Segundo \citeonline[p.~42]{Wazlawick2020}, ``a formulação do problema deve ser expressa de forma clara, objetiva e delimitada, evitando ambiguidades que possam comprometer o escopo da pesquisa''.
 
-\begin{citacao}
-A revisão bibliográfica não consiste em simplesmente listar os trabalhos encontrados, mas em analisá-los criticamente, identificando convergências, divergências e lacunas que justifiquem a realização de uma nova pesquisa \cite[p.~87]{Wazlawick2020}.
-\end{citacao}
+% \vspace{0.2cm}
+% \textbf{Citação direta longa} (mais de 3 linhas, apenas quando indispensável) --- recuo de 4\,cm, fonte menor, sem aspas:
 
-\textbf{Resumo}: use citações indiretas como regra. Reserve a citação direta para casos excepcionais em que a transcrição literal seja realmente necessária.
-}}
+% \begin{citacao}
+% A revisão bibliográfica não consiste em simplesmente listar os trabalhos encontrados, mas em analisá-los criticamente, identificando convergências, divergências e lacunas que justifiquem a realização de uma nova pesquisa \cite[p.~87]{Wazlawick2020}.
+% \end{citacao}
+
+% \textbf{Resumo}: use citações indiretas como regra. Reserve a citação direta para casos excepcionais em que a transcrição literal seja realmente necessária.
+% }}
 
 % ---------------------------------------------------------------
 \section{Justificativa}
@@ -234,29 +248,34 @@ Muitos sistemas ainda utilizam técnicas tradicionais de previsão, as quais nã
 \section{Objetivo}
 \label{sec:objetivo}
 
-Os objetivos definem o que o trabalho pretende alcançar. Devem ser claros, mensuráveis e diretamente relacionados ao problema identificado.
+% Os objetivos definem o que o trabalho pretende alcançar. Devem ser claros, mensuráveis e diretamente relacionados ao problema identificado.
+Este estudo tem como objetivo avaliar o uso de um RNN para previsões de estoque hospitalar, analisar sensibilidade em seus parâmetros de entrada e como isso afeta os resultados. 
 
 \subsection{Objetivo principal}
 
-O objetivo principal deve ser \textbf{único} e sintetizar o propósito central do trabalho em uma frase direta. Ele deve responder à pergunta: \textit{o que este trabalho pretende resolver ou alcançar?}
+% O objetivo principal deve ser \textbf{único} e sintetizar o propósito central do trabalho em uma frase direta. Ele deve responder à pergunta: \textit{o que este trabalho pretende resolver ou alcançar?}
+Anlisar sensibilidade de um RNN para previsão de estoque hospitalar crítico
 
-Exemplo: \textit{Desenvolver um sistema web para gerenciamento de tarefas acadêmicas que permita aos estudantes organizar suas atividades de forma colaborativa.}
+% Exemplo: \textit{Desenvolver um sistema web para gerenciamento de tarefas acadêmicas que permita aos estudantes organizar suas atividades de forma colaborativa.}
 
-\textbf{Dica}: utilize verbos no infinitivo como \textit{desenvolver}, \textit{analisar}, \textit{propor}, \textit{avaliar}, \textit{implementar}, \textit{comparar}, entre outros. Evite verbos vagos como \textit{estudar} ou \textit{entender}.
+% \textbf{Dica}: utilize verbos no infinitivo como \textit{desenvolver}, \textit{analisar}, \textit{propor}, \textit{avaliar}, \textit{implementar}, \textit{comparar}, entre outros. Evite verbos vagos como \textit{estudar} ou \textit{entender}.
 
 \subsection{Objetivos secundários}
 
 Os objetivos secundários são desdobramentos do objetivo principal. Eles descrevem as etapas ou ações necessárias para atingir o objetivo principal. Devem ser mensuráveis e verificáveis.
 
 \begin{enumerate}
-    \item Realizar levantamento bibliográfico sobre [tema específico];
-    \item Identificar e analisar os requisitos do sistema/solução proposta;
-    \item Projetar a arquitetura da solução com base nos requisitos levantados;
-    \item Implementar um protótipo funcional da solução proposta;
-    \item Validar a solução por meio de [testes, métricas, estudo de caso, etc.].
+    % \item Realizar levantamento bibliográfico sobre [tema específico];
+    % \item Identificar e analisar os requisitos do sistema/solução proposta;
+    % \item Projetar a arquitetura da solução com base nos requisitos levantados;
+    % \item Implementar um protótipo funcional da solução proposta;
+    % \item Validar a solução por meio de [testes, métricas, estudo de caso, etc.].
+    \item Coletar base de dados públicas para treinamento;
+    \item Identificar e analisar onde será realizado os treinamentos;
+    \item Implementar algoritimo com tecnicas de RNN;
 \end{enumerate}
 
-\textbf{Atenção}: cada objetivo secundário deve contribuir diretamente para o alcance do objetivo principal. Evite listar objetivos que não tenham relação clara com o problema.
+% \textbf{Atenção}: cada objetivo secundário deve contribuir diretamente para o alcance do objetivo principal. Evite listar objetivos que não tenham relação clara com o problema.
 
 % ===============================================================
 % CAPÍTULO 2 - REVISÃO BIBLIOGRÁFICA
@@ -270,13 +289,15 @@ A revisão bibliográfica tem como finalidade apresentar o embasamento teórico 
 \section{Referencial teórico}
 \label{sec:referencial}
 
-Apresente os principais conceitos, teorias e definições que fundamentam o trabalho. O referencial teórico deve fornecer ao leitor a base necessária para compreender o problema e a solução proposta.
+% Apresente os principais conceitos, teorias e definições que fundamentam o trabalho. O referencial teórico deve fornecer ao leitor a base necessária para compreender o problema e a solução proposta.
+% Organize esta seção por temas ou conceitos, não por autor. Cada subseção deve abordar um conceito relevante, explicando-o e relacionando-o ao contexto do trabalho.
+% Por exemplo: se o trabalho envolve desenvolvimento web, aborde conceitos como arquitetura cliente-servidor, APIs REST, padrões de projeto, etc. Se envolve inteligência artificial, explique os algoritmos e técnicas que serão utilizados.
+% Utilize citações para fundamentar cada conceito apresentado. Segundo \citeonline{Wazlawick2020}, o referencial teórico deve demonstrar que o autor domina os fundamentos necessários para conduzir a pesquisa.
 
-Organize esta seção por temas ou conceitos, não por autor. Cada subseção deve abordar um conceito relevante, explicando-o e relacionando-o ao contexto do trabalho.
+Uma rede neural recorrente (RNN) é uma rede neural a qual recebe entradas, normalmente de sereies temporais, para aprendizado de maquina com a capacidade de gerar conclusões e previsões como base nesses dados. Segundo \citeonline[p.~533]{Rumelhart1986}, "Descrevemos um novo procedimento de aprendizagem, a retropropagação, para
+redes de unidades semelhantes a neurônios. O procedimento ajusta repetidamente os pesos das conexões na rede de modo a minimizar uma medida da diferença entre o vetor de saída real da rede e o vetor de saída desejado.".
+  
 
-Por exemplo: se o trabalho envolve desenvolvimento web, aborde conceitos como arquitetura cliente-servidor, APIs REST, padrões de projeto, etc. Se envolve inteligência artificial, explique os algoritmos e técnicas que serão utilizados.
-
-Utilize citações para fundamentar cada conceito apresentado. Segundo \citeonline{Wazlawick2020}, o referencial teórico deve demonstrar que o autor domina os fundamentos necessários para conduzir a pesquisa.
 
 % ---------------------------------------------------------------
 \section{Metodologia da pesquisa bibliográfica}
@@ -286,14 +307,21 @@ Descreva como a pesquisa bibliográfica foi conduzida, incluindo:
 
 \begin{itemize}
     \item \textbf{Bases de dados consultadas}: Google Scholar, IEEE Xplore, ACM Digital Library, SciELO, Periódicos CAPES, entre outras;
-    \item \textbf{Palavras-chave utilizadas}: liste os termos de busca em português e inglês;
+    \item \textbf{Palavras-chave utilizadas}: 
+    \begin{itemize}
+        \item ("critical inventory" OR "critical stock" OR "medical supplies" OR "hospital formulary") AND ("deep learning" OR "neural network" OR "LSTM" OR "RNN") AND ("forecasting" OR "optimization" OR "demand prediction") AND ("hospital" OR "healthcare" OR "pharmaceutical"); 
+        \item ("LSTM" OR "GRU" OR "recurrent neural network") AND ("time series forecasting" OR "sequential prediction"); 
+        \item ("inventory management" OR "stock forecasting" OR "demand prediction") AND ("hospital" OR "pharmacy" OR "medical supplies" OR "critical stock"); 
+        \item ("sensitivity analysis" OR "feature importance" OR "SHAP" OR "Sobol index" OR "ablation study") AND ("neural network" OR "deep learning" OR "machine learning").
+    \end{itemize}
     \item \textbf{Critérios de inclusão e exclusão}: quais critérios foram usados para selecionar ou descartar trabalhos (período, idioma, relevância, tipo de publicação);
-    \item \textbf{Período de abrangência}: intervalo de anos das publicações consultadas.
+    \item \textbf{Período de abrangência}: média de 5 a 6 anos.
 \end{itemize}
 
-Exemplo de descrição:
+%Exemplo de descrição:
+%\textit{A pesquisa bibliográfica foi realizada nas bases Google Scholar, IEEE Xplore e ACM Digital Library, utilizando as palavras-chave ``machine learning'', ``classificação de texto'' e ``processamento de linguagem natural''. Foram selecionados artigos publicados entre 2018 e 2025, em português e inglês, que abordassem diretamente técnicas de classificação automática de documentos.}
+A pesquisa bibliográfica foi realizada nas bases Google Scholar, IEEE Xplore, ACM Digital Library, SciELO e Periódicos CAPES, entre outras, utilizando combinações de palavras-chave estruturadas em quatro eixos temáticos: gestão de estoque crítico e insumos hospitalares, redes neurais recorrentes e aprendizado profundo, previsão de demanda em ambientes de saúde, e análise de sensibilidade em modelos de aprendizado de máquina. Entre as expressões empregadas destacam-se termos como "critical inventory", "LSTM", "demand prediction", "hospital pharmacy" e "SHAP", combinados por operadores booleanos para maior precisão na recuperação dos resultados. Foram selecionados artigos publicados predominantemente nos últimos cinco a seis anos, em português e inglês, que abordassem diretamente a aplicação de técnicas de aprendizado profundo — com ênfase em arquiteturas recorrentes como LSTM e GRU — na previsão e otimização de estoques críticos em contextos hospitalares e farmacêuticos. Foram excluídos trabalhos que não apresentassem relação direta com os temas centrais da pesquisa, publicações sem revisão por pares e estudos cujo foco recaísse exclusivamente sobre domínios clínicos sem interface com gestão de suprimentos ou modelagem preditiva.
 
-\textit{A pesquisa bibliográfica foi realizada nas bases Google Scholar, IEEE Xplore e ACM Digital Library, utilizando as palavras-chave ``machine learning'', ``classificação de texto'' e ``processamento de linguagem natural''. Foram selecionados artigos publicados entre 2018 e 2025, em português e inglês, que abordassem diretamente técnicas de classificação automática de documentos.}
 
 % ---------------------------------------------------------------
 \section{Fundamentos}
