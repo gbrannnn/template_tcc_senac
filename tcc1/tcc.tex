@@ -35,6 +35,8 @@
 \usepackage{pgfgantt}               % Diagramas de Gantt
 \usepackage[brazilian,hyperpageref]{backref}  % Páginas com citações
 \usepackage[alf]{abntex2cite}       % Citações ABNT
+\usepackage{tabularx}                % Tabelas com largura automática
+\usepackage{booktabs}               % Tabelas profissionais
 
 % ---------------------------------------------------------------
 % CONFIGURAÇÕES DO PDF
@@ -67,7 +69,7 @@
 \autor{Gabriel Brandão Vechani de Freitas}
 \local{São Paulo}
 \data{2025}
-\orientador{Prof. Nome do Orientador}
+\orientador{Prof. Douglas Baquião}
 % \coorientador{Prof. Nome do Coorientador} % Descomente se houver coorientador
 
 \instituicao{%
@@ -165,9 +167,9 @@ trabalho, seguidos das referências bibliográficas.
 \label{cap:introducao}
 
 %A introdução deve apresentar o tema do trabalho de forma clara e objetiva, situando o leitor no contexto da pesquisa. Neste capítulo, são apresentados o contexto no qual o problema se insere, a justificativa para a realização do estudo e os objetivos que norteiam o desenvolvimento do trabalho.
-O gerenciamento de estoques é de grande importância para garantir a qualidade e a eficiência nos procedimentos hospitalares, tendo bastante destaque para qualidade no atendimento e execução de processos. Para os hospitais, os estoques desempenham um papel fundamental, pois viabilizam a prestação de serviços aos pacientes, e principalmente, para a assistência. Segundo \citeonline{Hiaretto2021}, "Ao realizar os acompanhamentos, controles e monitoramentos de forma lógica e estratégica, o nível de prejuízos e desvios será inferior. Para alcançar este nível na empresa é necessário, principalmente, acompanhamento das rotinas executadas diariamente e auditorias dos processos dos estoques". Uma má gestão da cadeia de abastecimento pode resultar em excesso de insumos, custos fora do orçamento e falta de itens essenciais para o atendimento. Por isso, é essencial administrar e controlar as entradas e saídas de insumos necessários para o atendimento nas instituições, mantendo o funcionamento das operações, mas com foco em menor estoque possível, e é desafiada cotidianamente a manter a previsibilidade de compra e consumo para que não haja desperdícios e nem falta \citeonline{Garcia2012}.
+O gerenciamento de estoques é de grande importância para garantir a qualidade e a eficiência nos procedimentos hospitalares, tendo destaque siginificativo para a qualidade no atendimento e execução de processos. Para os hospitais, os estoques desempenham um papel fundamental, pois viabilizam a prestação de serviços aos pacientes, e principalmente, para a assistência. Segundo \citeonline{Hiaretto2021}, "Ao realizar os acompanhamentos, controles e monitoramentos de forma lógica e estratégica, o nível de prejuízos e desvios será inferior. Para alcançar este nível na empresa é necessário, principalmente, acompanhamento das rotinas executadas diariamente e auditorias dos processos dos estoques". Uma má gestão da cadeia de abastecimento pode resultar em excesso de insumos, custos fora do orçamento e falta de itens essenciais para o atendimento. Por isso, é essencial administrar e controlar as entradas e saídas de insumos necessários para o atendimento nas instituições, mantendo o funcionamento das operações, mas com foco em menor estoque possível, e é desafiada cotidianamente a manter a previsibilidade de compra e consumo para que não haja desperdícios e nem falta. \citeonline{Paulo2024}.
 
-Com o aumento da complexidade dos sistemas de saúde e da demanda por insumos hospitalares, o planeamento de estoques se torna um grande desafio enfrentado pelas instituições de saúde na atualidade, sendo capaz de instituir gargalos nos processos e procedimentos dessas instituições. Em um ambiente em que a escassez de recursos e a pressão assistencial são constantes, em conjunto com a imprevisibilidade da demanda, potencializada por eventos epidemiológicos, sazonalidades e picos de ocupação, a previsibilidade e a precisão operacional deixaram de ser diferenciais e tornaram-se vitais. Para \citeonline{Thiago2025}, é justamente nesse ponto que a Inteligência Artificial (IA) vem assumindo um papel transformador, oferecendo um novo patamar de precisão e eficiência na operação logística hospitalar.
+Com o aumento da complexidade dos sistemas de saúde e da demanda por insumos hospitalares, o planeamento de estoques se torna um grande desafio enfrentado pelas instituições de saúde na atualidade, sendo capaz de criar gargalos nos processos e procedimentos dessas instituições. Em um ambiente em que a escassez de recursos e a pressão assistencial são constantes, em conjunto com a imprevisibilidade da demanda, potencializada por eventos epidemiológicos, sazonalidades e picos de ocupação, a previsibilidade e a precisão operacional deixaram de ser diferenciais e tornaram-se vitais. Para \citeonline{Thiago2025}, é justamente nesse ponto que a Inteligência Artificial (IA) vem assumindo um papel transformador, oferecendo um novo patamar de precisão e eficiência na operação logística hospitalar.
 %Para \citeonline{Rachel2025}, Há muito que estas perturbações no inventário hospitalar são difíceis de prever e de gerir pelos hospitais. Na mesma pesquisa realizada por \citeonline{Rachel2025}, relata  
 
 % Tendo isso em vista, este trabalho propõe analisar a aplicação de uma Rede Neural Recorrente (RNN) na previsão da demanda de itens críticos hospitalares, com ênfase na análise de sensibilidade do modelo a variações nos parâmetros e condições de entrada. A escolha por esse tipo de arquitetura se justifica pela sua capacidade inerente de capturar dependências temporais em séries históricas de consumo, característica essencial em ambientes hospitalares, onde a demanda por insumos pode ser influenciada por sazonalidades, surtos epidemiológicos e variações no perfil de atendimento. O objetivo é compreender como esse método pode contribuir para ampliar e aprimorar a eficiência do planejamento de estoques, reduzindo tanto o excesso de insumos — que implica em custos desnecessários e risco de vencimento — quanto os riscos de desabastecimento, que podem comprometer diretamente a qualidade do atendimento e resultar em desfechos clínicos adversos, incluindo fatalidades evitáveis.
@@ -181,13 +183,11 @@ Tendo isso como base, este trabalho tem como foco propor analisar a aplicação 
 %Apresente o cenário que originou o problema, ressaltando fatos, indicadores e lacunas identificadas na área de estudo. O contexto deve situar o leitor sobre o estado atual do tema, mostrando a relevância do assunto para a Computação e para a sociedade.
 %Descreva o ambiente ou domínio em que o problema ocorre, utilizando dados e referências que comprovem a existência do problema. Explique quem são os principais afetados e quais são as consequências de não resolvê-lo.
 
-Os principais desafios para a gestão de estoque são as variações sazonais, as emergências sanitárias e as mudanças no perfil epidemiológico da população, com impactos significativos em como será realizado a previsão de demanda na cadeia de abasteciemnto hospitalar. A falta de material pode afetar diretamente a saúde do paciente, ao passo que o excesso pode causar desperdícios, dado que muitos materiais têm um prazo de validade limitado. O uso de diversos sistemas e metodologias de estoque, irão auxiliar no processo de previsão e abasteciemto de forma eficiente a manter em ordem os procedimentos diarios sem transtornos para as instituições \citeonline{Hiaretto2021}.
-
-Uma abordagem promissora reside na aplicação de técnicas de Deep Learning (DL), que têm demonstrado potencial para otimizar os processos de gestão da cadeia de abastecimento. Alguns estudos têm explorado a utilização de algoritmos de Machine Learning (ML) para resolver problemas de previsão de demanda, apresentando assim alternativas para melhorar a eficiência e a rentabilidade das cadeias de produção farmacêutica e hopitalar \citeonline{Andres2025}. No entanto, a aplicação de redes neurais recorrentes (RNN) para previsão de demanda em estoques hospitalares ainda é um campo pouco explorado, especialmente no que diz respeito à análise de sensibilidade do modelo a variações nos parâmetros de entrada.
+Uma abordagem promissora reside na aplicação de técnicas de Deep Learning (DL), que têm demonstrado potencial para otimizar os processos de gestão da cadeia de abastecimento. Alguns estudos têm explorado a utilização de algoritmos de Machine Learning (ML) para resolver problemas de previsão de demanda, apresentando assim alternativas para melhorar a eficiência e a rentabilidade das cadeias de produção farmacêuticas e hospitalares \citeonline{Andres2025}. No entanto, a aplicação de Redes Neurais Recorrentes (RNN) para previsão de demanda em estoques hospitalares ainda é um campo pouco explorado, especialmente no que diz respeito à análise de sensibilidade do modelo a variações nos parâmetros de entrada.
 
 Os itens críticos hospitalares, como os medicamentos essenciais, os materiais cirúrgicos e os consumíveis de suporte à vida, exigem um elevado nível de controlo, pois a sua indisponibilidade pode levar à interrupção de procedimentos, ao aumento do tempo de internamento ou até a riscos para a vida dos pacientes. Apesar da importância destes itens, muitos sistemas de gestão continuam a utilizar métodos tradicionais de previsão, como médias históricas ou modelos estatísticos simples, que nem sempre conseguem capturar os padrões complexos e dinâmicos da procura.
 
-As RNN têm vasta capacidade para lidar com séries temporais, aprendendo dependências temporais e melhorando a precisão das previsões. No entanto, no contexto hospitalar, a sua utilização com este objetivo não está muito difundida, principalmente na análise de sensibilidade aos parâmetros.
+As RNN têm vasta capacidade para lidar com séries temporais, aprendendo padrões temporais e melhorando a precisão das previsões. No entanto, no contexto hospitalar, a sua utilização com este objetivo não está muito difundida, principalmente na análise de sensibilidade aos parâmetros.
 
 % \vspace{0.3cm}
 % \noindent\fbox{\parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule}{%
@@ -237,13 +237,13 @@ As RNN têm vasta capacidade para lidar com séries temporais, aprendendo depend
 
 %Mostre que o trabalho não é apenas um texto sobre um tema popular, mas sim uma proposta que visa preencher uma lacuna real e contribuir de forma significativa para a área.
 
-Este trabalho justifica-se pela necessidade de aprimoramento de técnicas e ferramentas de previsão de demanda, assim como de gerenciamento de estoques hospitalares. Tendo em conta a complexidade de uma variabilidade na natureza temporal dos dados, uma abordagem mais robusta e adaptativa, com uso de aprendizado de máquina, pode auxiliar.
+A crescente complexidade na gestão de estoques hospitalares, em conjunto à natureza temporal e variável da demanda por insumos críticos, evidencia a necessidade de abordagens mais robustas para previsão de demanda. Métodos tradicionais, como médias históricas e modelos estatísticos simples, frequentemente não conseguem capturar os padrões dinâmicos presentes nesse tipo de dado, o que justifica a investigação e analise de técnicas de aprendizado de máquina capazes de lidar com essa variabilidade. Nesse sentido, este trabalho propõe a aplicação de uma RNN com arquitetura LSTM, com ênfase na análise de sensibilidade do modelo aos parâmetros de entrada, como forma de ampliar a compreensão sobre o comportamento desses modelos em contextos hospitalares.
 
-No ponto de vista académico, este estudo contribui para o avanço e análise de técnicas de aprendizado de máquina, com foco em redes neurais recorrentes (RNNs), voltado para a área da saúde. Sendo uma área vastamente explorada, ainda existe espaço para estudo e avanço no que se diz respeito a fazer uso dessas técnicas para o âmbito hospitalar.
+Do ponto de vista acadêmico, embora as RNNs e a arquitetura LSTM sejam amplamente estudadas para tarefas de previsão em séries temporais, sua aplicação específica no gerenciamento de estoques hospitalares ainda possui vasta exploração. Mais escassa ainda é a investigação sobre como variações nos parâmetros de entrada afetam o desempenho preditivo nesses cenários. Assim, este estudo contribui para preencher essa lacuna, oferecendo uma análise sistemática do comportamento do modelo frente à variabilidade dos dados.
 
-Sob o ponto de vista profissional, a otimização na previsão da demanda de itens críticos tem efeito significativo para a área de saúde. Podendo auxiliar no gerenciamento de excesso de insumos, gerando uma diminuição de impactos financeiros, e na falta desses insumos, que pode acarretar em má eficiência no atendimento ao paciente, podendo gerar complicações mais severas. Apoiando gestores voltados ao de planejamento a tomarem as melhores definições com ganho de eficiência.
+Do ponto de vista profissional, a imprecisão na previsão de demanda de itens críticos gera consequências diretas para a operação hospitalar. O excesso de insumos representa desperdício financeiro e risco de vencimento de materiais, enquanto a falta pode comprometer procedimentos e colocar em risco a segurança do paciente. Uma ferramenta preditiva mais precisa oferece aos gestores de saúde uma base mais sólida para a tomada de decisões, contribuindo tanto para a eficiência operacional quanto para a qualidade do atendimento.
 
-Muitos sistemas ainda utilizam técnicas tradicionais de previsão, as quais não conseguem reconhecer padrões temporais no consumo hospitalar, podendo ser uma lacuna. O uso de RNNs para melhoria nesse fluxo, com ênfase no estudo de sensibilidade às variabilidades dos dados, tais dados sendo de fontes públicas, pode contribuir para o preenchimento desta lacuna existente.
+Por fim, o uso de dados de fontes públicas para o treinamento do modelo reforça o potencial de replicabilidade e escalabilidade da abordagem proposta, tornando-a acessível a diferentes instituições de saúde, independentemente de seu porte ou infraestrutura tecnológica.
 % ---------------------------------------------------------------
 \section{Objetivo}
 \label{sec:objetivo}
@@ -254,7 +254,7 @@ Este estudo tem como objetivo avaliar o uso de um RNN para previsões de estoque
 \subsection{Objetivo principal}
 
 % O objetivo principal deve ser \textbf{único} e sintetizar o propósito central do trabalho em uma frase direta. Ele deve responder à pergunta: \textit{o que este trabalho pretende resolver ou alcançar?}
-Anlisar sensibilidade de um RNN para previsão de estoque hospitalar crítico
+Analisar sensibilidade de um RNN para previsão de estoque hospitalar crítico
 
 % Exemplo: \textit{Desenvolver um sistema web para gerenciamento de tarefas acadêmicas que permita aos estudantes organizar suas atividades de forma colaborativa.}
 
@@ -272,7 +272,7 @@ Os objetivos secundários são desdobramentos do objetivo principal. Eles descre
     % \item Validar a solução por meio de [testes, métricas, estudo de caso, etc.].
     \item Coletar base de dados públicas para treinamento;
     \item Identificar e analisar onde será realizado os treinamentos;
-    \item Implementar algoritimo com tecnicas de RNN;
+    \item Implementar algoritmo com tecnicas de RNN;
 \end{enumerate}
 
 % \textbf{Atenção}: cada objetivo secundário deve contribuir diretamente para o alcance do objetivo principal. Evite listar objetivos que não tenham relação clara com o problema.
@@ -291,12 +291,25 @@ A revisão bibliográfica tem como finalidade apresentar o embasamento teórico 
 
 % Apresente os principais conceitos, teorias e definições que fundamentam o trabalho. O referencial teórico deve fornecer ao leitor a base necessária para compreender o problema e a solução proposta.
 % Organize esta seção por temas ou conceitos, não por autor. Cada subseção deve abordar um conceito relevante, explicando-o e relacionando-o ao contexto do trabalho.
-% Por exemplo: se o trabalho envolve desenvolvimento web, aborde conceitos como arquitetura cliente-servidor, APIs REST, padrões de projeto, etc. Se envolve inteligência artificial, explique os algoritmos e técnicas que serão utilizados.
+% Por exemplo: se o trabalho envolve desenvolvimento web, aborde conceitots como arquitetura cliente-servidor, APIs REST, padrões de projeto, etc. Se envolve inteligência artificial, explique os algoritmos e técnicas que serão utilizados.
 % Utilize citações para fundamentar cada conceito apresentado. Segundo \citeonline{Wazlawick2020}, o referencial teórico deve demonstrar que o autor domina os fundamentos necessários para conduzir a pesquisa.
 
+\subsection{Gestão de Estoques em Ambientes Hospitalares}
+A gestão de estoque em ambientes hospitalares é um processo crítico e essencial para garantir a continuidade e qualidade de sistemas de saúde. Como caracteristica hopitalar é lidar como uma grande variedade de itens, que possuem data de validade, alta criticidade e demanda frequentemente variável. Nesse contexto, a falta de deteminado item pode comprometer diretamente o atendimento ao paciente, por outro lado o excesso de estoque pode resultar em desperdício e aumento de custos. Sendo assim, o sistema logístico hospitalar deve ser eficientemente planejado e coordenado \citeonline[p.~68]{Claudia2021}.
+
+Em complemento, o uso de tecnologias e técnicas avançadas, como o aprendizado de máquina, tem se mostrado promissor para otimizar a gestão de estoques hospitalares. A capacidade de prever a demanda com maior precisão pode ajudar a reduzir tanto o excesso quanto a falta de insumos, melhorando a eficiência operacional e a qualidade do atendimento ao paciente. No entanto, a aplicação dessas técnicas ainda é um campo em desenvolvimento, especialmente no que diz respeito à análise de sensibilidade dos modelos preditivos utilizados \citeonline{SIERRAESPINEL20252791}.
+
+
+\subsection{Redes Neurais Recorrentes e LSTMs para Séries Temporais}
 Uma rede neural recorrente (RNN) é uma rede neural a qual recebe entradas, normalmente de sereies temporais, para aprendizado de maquina com a capacidade de gerar conclusões e previsões como base nesses dados. Segundo \citeonline[p.~533]{Rumelhart1986}, "Descrevemos um novo procedimento de aprendizagem, a retropropagação, para
-redes de unidades semelhantes a neurônios. O procedimento ajusta repetidamente os pesos das conexões na rede de modo a minimizar uma medida da diferença entre o vetor de saída real da rede e o vetor de saída desejado.".
-  
+redes de unidades semelhantes a neurônios. O procedimento ajusta repetidamente os pesos das conexões na rede de modo a minimizar uma medida da diferença entre o vetor de saída real da rede e o vetor de saída desejado.". Podendo ser usada para previsão de demanda, classificação de texto, reconhecimento de fala, entre outros. As RNNs são capazes de capturar dependências temporais em dados sequenciais, o que as torna adequadas para tarefas como previsão de séries temporais, onde os padrões podem se estender por longos intervalos de tempo. No entanto, as RNNs tradicionais enfrentam dificuldades para aprender dependências de longo prazo devido ao problema do desvanecimento do gradiente, o que limita sua eficácia em tarefas que exigem a retenção de informações por períodos prolongados.
+
+A arquitetura Long Short-Term Memory (LSTM) é um tipo de RNN projetada para lidar com o problema do desvanecimento do gradiente, permitindo que a rede aprenda dependências de longo prazo em dados sequenciais. Contendo uma camada escondida de memória, a LSTM é capaz de manter informações por períodos prolongados, o que a torna especialmente útil para tarefas como previsão de séries temporais, onde os padrões podem se estender por longos intervalos de tempo \citeonline{Hochreiter1997}. Podendo ser aplicada em diversos domínios, como o deste estudo que é a previsão de demanda em estoques hospitalares, onde a capacidade de capturar padrões temporais complexos é crucial para melhorar a precisão das previsões e otimizar o gerenciamento de suprimentos.
+
+\subsection{Previsão de Ruptura e Níveis de Estoque*}
+
+\subsection{Análise de Sensibilidade e Robustez em Modelos de IA}
+
 
 
 % ---------------------------------------------------------------
@@ -360,17 +373,33 @@ Para cada trabalho relacionado, descreva:
     \item Como o \textbf{seu trabalho se diferencia} ou avança em relação a ele.
 \end{enumerate}
 
-\subsection{Trabalho 1: [Título do trabalho]}
+\subsection{Trabalho 1: Applying Deep Learning and Forecasting Techniques to the Pharmaceutical Supply Chain}
 
-\citeonline{Silva2022} abordou o problema de [descrever o problema --- deve ser o mesmo ou muito similar ao seu]. Para resolvê-lo, os autores propuseram [descrever a solução]. A metodologia utilizada foi [descrever]. Os resultados mostraram que [descrever]. No entanto, a solução apresenta limitações como [descrever as lacunas que permanecem]. O presente trabalho diferencia-se por [explicar como sua proposta avança na resolução do mesmo problema].
+% \citeonline{Silva2022} abordou o problema de [descrever o problema --- deve ser o mesmo ou muito similar ao seu]. Para resolvê-lo, os autores propuseram [descrever a solução]. A metodologia utilizada foi [descrever]. Os resultados mostraram que [descrever]. No entanto, a solução apresenta limitações como [descrever as lacunas que permanecem]. O presente trabalho diferencia-se por [explicar como sua proposta avança na resolução do mesmo problema].
 
-\subsection{Trabalho 2: [Título do trabalho]}
+\citeonline{SIERRAESPINEL20252791} abordou o problema de melhorar o atendimento aos pacientes através da disponibilidade de medicamentos, como também contribuir para a eficácia operacional no setor da saúde. Para resolvê-lo, os autores propuseram aplicar técnicas de modelação econométrica e estratégias de aprendizagem profunda (DL), com o objetivo de mensurar e gerar previsões com uma boa precisão. A metodologia utilizada foi MLOps (Operações de Aprendizagem Automática), abrangendo princípios de desenvolvimento de software com práticas de gestão de sistemas, onde foi usado para identificação de modelos e estratégias mais adequadas. Já para o modelo econométrico ARIMA, foram utilizados critérios como o Critério de Informação de Akaike (AIC), o Critério de Informação Bayesiano (BIC) e o Critério de Informação de Hannan-Quinn (HQIC), em conjunto ao teste de Ljung-Box. E para avaliar o aprendizado profundo, foram usados o Erro Absoluto Médio (MAE), o Erro Quadrático Médio (MSE) e o Erro Quadrático Médio Raiz (RMSE). 
 
-[Descrever o segundo trabalho seguindo a mesma estrutura acima, sempre evidenciando que o problema abordado é o mesmo ou muito próximo ao seu.]
+Os resultados mostraram que os dois modelos, o econométrico ARIMA e o de aprendizado profundo (DL), possuem uma eficácia significativa para previsões de demanda de medicamentos, onde em conjunto podem oferecer uma maior precisão nas previsões, resultado demonstrado com o uso dos critérios definidos. No entanto, a solução apresenta limitações como a ausência de análise de sensibilidade nos parâmetros de entrada e a não avaliação da robustez dos modelos frente a perturbações nos dados de entrada. O presente trabalho diferencia-se por fazer uso de uma base pública, a qual será tratada para resultar em um grupo de medicamentos essenciais para o sistema de saúde, e por aplicar testes nos parâmetros de entrada para avaliar como o modelo de aprendizagem de máquina se comporta frente a essas variações.
 
-\subsection{Trabalho 3: [Título do trabalho]}
 
-[Descrever o terceiro trabalho seguindo a mesma estrutura acima, sempre evidenciando que o problema abordado é o mesmo ou muito próximo ao seu.]
+\subsection{Trabalho 2: Predictive Data Analysis: Leveraging RNN and LSTM Techniques for Time Series Dataset}
+
+\citeonline{AGARWAL2024979} abordou o problema de prever valores futuros de cotações no mercado de ações. Para resolvê-lo, os autores propuseram utilizar Redes Neurais Recorrentes (RNN) e Memória de Longo Prazo (LSTM) para gerar previsões a partir de um conjunto de dados, superando o problema do desvanecimento do gradiente com o uso da arquitetura LSTM. A metodologia utilizada foi estruturar a solução em módulos e classes, sendo eles:
+\begin{itemize}
+\item Módulo de pré-processamento de dados: inclui as funções para carregar, limpar e normalizar os dados relativos aos preços das ações;
+\item Módulo de arquitetura do modelo: inclui as funções para construir os modelos RNN e LSTM;
+\item Módulo de treino: inclui as funções para treinar os modelos com base nos dados históricos;
+\item Módulo de previsão: inclui as funções para efetuar previsões sobre os dados de teste e avaliar o desempenho dos modelos.
+\end{itemize}
+Para construir os modelos, os autores utilizaram Python e as bibliotecas Keras e TensorFlow. Para normalizar os dados, foi utilizado o MinMaxScaler da biblioteca sklearn. A separação dos conjuntos de treino e teste foi de 85:15, ou seja, 85\% dos dados foram utilizados para treinar o modelo LSTM e 15\% para teste, com janelas de 100 pontos de dados. O Erro Quadrático Médio Raiz (RMSE), as medidas R-quadrado e as métricas de acurácia foram utilizados para avaliar o desempenho dos modelos.
+
+Os resultados mostraram que o modelo LSTM apresentou desempenho superior ao modelo RNN: o modelo RNN, após 100 épocas, obteve uma acurácia de 97,12\% nos dados de treino e de 81,01\% nos dados de teste, enquanto o modelo LSTM, aplicado ao mesmo conjunto de dados, alcançou 98,10\% nos dados de treino e 91,97\% nos dados de teste. No entanto, assim como o trabalho anterior, a solução apresenta limitações como a ausência de análise de sensibilidade nos parâmetros de entrada, a não avaliação da robustez dos modelos frente a perturbações nos dados e a aplicação restrita ao domínio financeiro, sem contemplar contextos hospitalares. O presente trabalho diferencia-se por aplicar métodos de análise de sensibilidade e avaliação da robustez em um modelo preditivo voltado à gestão de estoques hospitalares críticos.
+
+\subsection{Trabalho 3: Performance analysis of neural network architectures for time series forecasting: A comparative study of RNN, LSTM, GRU, and hybrid models}
+
+\citeonline{YUNITA2025103462} abordou o problema de avaliar o desempenho de nove arquiteturas de redes neurais para previsão de séries temporais, nomeadamente RNN, LSTM, GRU, RNN-LSTM, RNN-GRU, LSTM-RNN, GRU-RNN, LSTM-GRU e GRU-LSTM. Para resolvê-lo, os autores propuseram uma avaliação baseada no método de Monte Carlo (MC), com o objetivo de garantir a confiabilidade dos resultados frente à variabilidade decorrente da inicialização aleatória dos pesos. A metodologia utilizada consistiu em selecionar três conjuntos de dados nas áreas da astronomia, cuidados de saúde e maquinaria, realizar uma análise exploratória de dados (EDA) como etapa preliminar de avaliação estatística e de qualidade, desenvolver as diferentes arquiteturas de redes neurais e, por fim, avaliar os modelos por meio de 100 iterações de Monte Carlo, utilizando as métricas de Erro Absoluto Médio (MAE), Erro Percentual Absoluto Médio (MAPE) e Erro Quadrático Médio (RMSE). 
+
+Os resultados mostraram que, pelo teste de Friedman, não houve diferença estatisticamente significativa entre as arquiteturas avaliadas. Esse resultado pode ter sido influenciado por fatores como a dimensão limitada da amostra, com apenas três conjuntos de dados para avaliação, e o possível mascaramento das diferenças de desempenho pelo ruído experimental. Ainda assim, os padrões de desempenho consistentes observados em todos os conjuntos de dados sugerem potenciais vantagens práticas para as arquiteturas híbridas baseadas em LSTM, especialmente as configurações LSTM-RNN e LSTM-GRU. No entanto, a solução apresenta limitações como o número reduzido de conjuntos de dados utilizados na avaliação, a ausência de investigação sobre o impacto de perturbações nos parâmetros de entrada sobre o desempenho preditivo e a não aplicação dos modelos em contextos hospitalares. O presente trabalho diferencia-se por aplicar uma análise de sensibilidade sistemática nos parâmetros de entrada de um modelo LSTM voltado à previsão de estoques hospitalares críticos, investigando como variações nesses parâmetros afetam o desempenho preditivo, parte não explorada por \citeonline{YUNITA2025103462}, que avaliam a robustez apenas em relação à inicialização aleatória dos pesos, sem considerar perturbações nos dados de entrada.
 
 \vspace{0.5cm}
 
@@ -380,19 +409,44 @@ Uma tabela comparativa ajuda a sintetizar as diferenças entre os trabalhos:
     \centering
     \caption{Comparação entre trabalhos relacionados}
     \label{tab:trabalhos_relacionados}
-    \begin{tabular}{l|c|c|c|c}
+
+    \begin{tabularx}{\textwidth}{p{2.8cm}|X|X|X|X}
         \toprule
         \textbf{Critério} & \textbf{Trabalho 1} & \textbf{Trabalho 2} & \textbf{Trabalho 3} & \textbf{Este trabalho} \\
         \midrule
-        Objetivo           & [resumo]   & [resumo]   & [resumo]   & [resumo] \\
+        Objetivo
+        & Previsão de demanda farmacêutica
+        & Previsão de cotações de ações
+        & Comparação de arquiteturas RNN, LSTM e GRU
+        & Análise de sensibilidade de LSTM para estoque hospitalar crítico \\
+        
         \midrule
-        Tecnologia         & [tecn.]    & [tecn.]    & [tecn.]    & [tecn.] \\
+        
+        Tecnologia
+        & ARIMA + DL (MLOps)
+        & RNN + LSTM (Keras/TensorFlow)
+        & RNN, LSTM, GRU, modelos híbridos
+        & LSTM + análise de sensibilidade \\
+        
         \midrule
-        Validação          & [método]   & [método]   & [método]   & [método] \\
+        
+        Validação
+        & MAE, MSE, RMSE, AIC, BIC
+        & RMSE, R², acurácia
+        & MAE, MAPE, RMSE (Monte Carlo)
+        & [método] \\
+        
         \midrule
-        Limitação          & [limit.]   & [limit.]   & [limit.]   & --- \\
+        
+        Limitação
+        & Sem análise de sensibilidade
+        & Sem análise de sensibilidade; domínio financeiro
+        & Poucos datasets; sem perturbações na entrada
+        & --- \\
+        
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
+
     \legend{Fonte: Elaborado pelo autor (2025)}
 \end{table}
 
