@@ -1,17 +1,635 @@
+% ===============================================================
+% BIBLIOGRAFIA - TEMPLATE TCC1 SENAC SANTO AMARO
+% ===============================================================
+% Este arquivo contém exemplos de referências no padrão ABNT
+% (NBR 6023:2018) para diferentes tipos de fontes.
+%
+% O pacote abntex2cite formata automaticamente as referências.
+% Basta adicionar suas entradas aqui e usar \cite ou
+% \citeonline no texto.
+%
+% TIPOS DE ENTRADA E FORMATO ABNT:
+% -----------------------------------------------------------------
+% book          -> SOBRENOME, Nome. Titulo. Edicao. Local: Editora, Ano.
+% article       -> SOBRENOME, Nome. Titulo do artigo. Periodico, v. X, n. Y, p. XX-YY, Ano.
+% inproceedings -> SOBRENOME, Nome. Titulo. In: EVENTO, Local. Anais. Editora, Ano. p. XX-YY.
+% mastersthesis -> SOBRENOME, Nome. Titulo. Ano. Dissertacao (Mestrado) - Instituicao, Local, Ano.
+% phdthesis     -> SOBRENOME, Nome. Titulo. Ano. Tese (Doutorado) - Instituicao, Local, Ano.
+% misc          -> SOBRENOME, Nome. Titulo. Ano. Disponivel em: URL. Acesso em: data.
+% manual        -> ORGANIZACAO. Titulo. Local, Ano.
+% ===============================================================
+
+
+% ---------------------------------------------------------------
+% EXEMPLOS DE LIVROS
+% Formato ABNT: SOBRENOME, Nome. Titulo: subtitulo. Edicao. Local: Editora, Ano.
+% ---------------------------------------------------------------
+
+% Livro com um autor
+
 @book{Wazlawick2020,
   author    = {Raul Sidnei Wazlawick},
   title     = {Metodologia de Pesquisa para Ciência da Computação},
+  publisher = {Elsevier},
   year      = {2020},
-  publisher = {Elsevier Brasil},
-  address   = {Rio de Janeiro},
+  edition   = {3},
+  address   = {Rio de Janeiro}
 }
 
-@article{Silva2022,
-  author  = {Silva, Ana Paula and Santos, Bruno},
-  title   = {Aplicação de técnicas formais na validação de sistemas distribuídos},
-  journal = {Revista Brasileira de Computação},
-  year    = {2022},
-  volume  = {18},
-  number  = {2},
-  pages   = {45--60},
+% Livro com dois autores
+@book{Pressman2016,
+  author    = {Roger S. Pressman and Bruce R. Maxim},
+  title     = {Engenharia de Software: uma abordagem profissional},
+  publisher = {McGraw-Hill},
+  year      = {2016},
+  edition   = {8},
+  address   = {Porto Alegre}
 }
+
+% Livro com um autor (outro exemplo)
+@book{Sommerville2019,
+  author    = {Ian Sommerville},
+  title     = {Engenharia de Software},
+  publisher = {Pearson},
+  year      = {2019},
+  edition   = {10},
+  address   = {São Paulo}
+}
+
+% Livro traduzido
+@book{Gamma2000,
+  author    = {Erich Gamma and Richard Helm and Ralph Johnson and John Vlissides},
+  title     = {Padrões de Projeto: soluções reutilizáveis de software orientado a objetos},
+  publisher = {Bookman},
+  year      = {2000},
+  address   = {Porto Alegre},
+  note      = {Tradução de Luiz A. Meirelles Salgado}
+}
+
+% Livro em inglês
+@book{Cormen2009,
+  author    = {Thomas H. Cormen and Charles E. Leiserson and Ronald L. Rivest and Clifford Stein},
+  title     = {Introduction to Algorithms},
+  publisher = {MIT Press},
+  year      = {2009},
+  edition   = {3},
+  address   = {Cambridge}
+}
+
+
+% ---------------------------------------------------------------
+% EXEMPLOS DE ARTIGOS DE PERIODICOS
+% Formato ABNT: SOBRENOME, Nome. Titulo do artigo. Periodico, Local, v. X, n. Y, p. XX-YY, ano.
+% ---------------------------------------------------------------
+
+% Artigo em periódico nacional
+@article{Silva2022,
+  author  = {João Carlos Silva and Maria Aparecida Santos},
+  title   = {Aplicação de técnicas formais na validação de sistemas distribuídos},
+  journal = {Revista Brasileira de Computação Aplicada},
+  year    = {2022},
+  volume  = {14},
+  number  = {2},
+  pages   = {45--58},
+  doi     = {10.5335/rbca.v14i2.12345}
+}
+
+% Artigo em periódico internacional
+@article{LeCun2015,
+  author  = {Yann LeCun and Yoshua Bengio and Geoffrey Hinton},
+  title   = {Deep Learning},
+  journal = {Nature},
+  year    = {2015},
+  volume  = {521},
+  number  = {7553},
+  pages   = {436--444},
+  doi     = {10.1038/nature14539}
+}
+
+% Artigo com DOI
+@article{Kitchenham2004,
+  author  = {Barbara Kitchenham},
+  title   = {Procedures for Performing Systematic Reviews},
+  journal = {Keele University Technical Report},
+  year    = {2004},
+  volume  = {33},
+  pages   = {1--26}
+}
+
+@article{Rumelhart1986,
+  author    = {Rumelhart, D. E. and Hinton, G. E. and Williams, R. J.},
+  title     = {Learning representations by back-propagating errors},
+  journal   = {Nature},
+  volume    = {323},
+  number    = {6088},
+  pages     = {533--536},
+  year      = {1986},
+  issn      = {1476-4687},
+  doi       = {10.1038/323533a0},
+  url       = {https://doi.org/10.1038/323533a0}
+}
+
+@article{Rachel2025,
+  author = {Rachel Somerstein},
+  journal = {Business Insider},
+  title = {3 hospital supply chain directors explain how AI is helping them manage critical inventory},
+  year = {2025}
+}
+
+@article{Paulo2024,
+  author  = {Paulo Sérgio Ferreira Fernandes and William de Sousa Dias},
+  journal = {Humanidades e Inovação},
+  title   = {Previsão de demanda: ferramenta auxiliadora na tomada de decisão no processo de aquisição de insumos em uma farmácia hospitalar localizada em Palmas-TO},
+  year    = {2024}
+}
+
+@article{Thiago2025,
+  author = {Thiago Fialho},
+  journal = {medicinasa},
+  title = {Previsibilidade e precisão: IA na gestão logística da saúde},
+  year = {2025}
+}
+
+@article{Hiaretto2021,
+  author  = {Chiaretto, S.},
+  title   = {Um estudo sobre os impactos da gestão de estoques nas instituições hospitalares},
+  journal = {Revista Científica Faculdade Unimed},
+  year    = {2021},
+  edition = {3}
+}
+
+@article{Hochreiter1997,
+  author    = {Hochreiter, S. and Schmidhuber, J.},
+  title     = {Long short-term memory},
+  journal   = {Neural Computation},
+  publisher = {MIT Press},
+  address   = {Cambridge, MA, USA},
+  volume    = {9},
+  number    = {8},
+  pages     = {1735--1780},
+  month     = nov,
+  year      = {1997},
+  issn      = {0899-7667},
+  doi       = {10.1162/neco.1997.9.8.1735},
+  url       = {https://doi.org/10.1162/neco.1997.9.8.1735}
+}
+
+@article{Claudia2021,
+  author  = {Claudia Lopes de Souza and Marcelo Land},
+  journal = {Revista de Administração Hospitalar e Inovação em Saúde (RAHIS)},
+  number  = {3},
+  title   = {Estratégias de gestão de estoque hospitalar em organizações públicas no Brasil: um estudo de caso},
+  volume  = {17},
+  year    = {2021}
+}
+
+@article{SIERRAESPINEL20252791,
+  title = {Applying Deep Learning and Forecasting Techniques to the Pharmaceutical Supply Chain},
+  journal = {Procedia Computer Science},
+  volume = {253},
+  pages = {2791-2800},
+  year = {2025},
+  note = {6th International Conference on Industry 4.0 and Smart Manufacturing},
+  issn = {1877-0509},
+  doi = {https://doi.org/10.1016/j.procs.2025.02.003},
+  url = {https://www.sciencedirect.com/science/article/pii/S1877050925003461},
+  author = {Andrés Ivan {Sierra Espinel} and Marco Javier {Suarez Barón}},
+  keywords = {Deep Neural Networks, Deep Learning, Forecasting, Supply Chain, Econometric Modeling},
+  abstract = {The study aims to apply econometric modeling techniques and deep learning (DL) strategies to generate forecasts with an optimal precision value. The problem not only improves patient care through the availability of medications but also contributes to operational efficiency in a sector crucial for public health. The challenge is to fine-tune the deployed models and provide valuable insights for key stakeholders and potential customers in the regional pharmaceutical production chain, facilitating the prioritization in the production and distribution of medications and focusing especially on those with high demand. We proof our proposed framework with two modeling possibilities on one large dataset from major pharma suppliers of San Rafael Regional Hospital in Tunja-Boyacá-Colombia and our results show superior performance. This project aims to optimize the efficiency and effectiveness of pharmaceutical supply chains, leading to improved healthcare service delivery and patient outcomes while facilitating informed decision-making among all stakeholders in the pharmaceutical production chain.}
+}
+
+@article{AGARWAL2024979,
+  title = {Predictive Data Analysis: Leveraging RNN and LSTM Techniques for Time Series Dataset},
+  journal = {Procedia Computer Science},
+  volume = {235},
+  pages = {979-989},
+  year = {2024},
+  note = {International Conference on Machine Learning and Data Engineering (ICMLDE 2023)},
+  issn = {1877-0509},
+  doi = {https://doi.org/10.1016/j.procs.2024.04.093},
+  url = {https://www.sciencedirect.com/science/article/pii/S1877050924007695},
+  author = {Harsh Agarwal and Ginika Mahajan and Anita Shrotriya and Deepika Shekhawat},
+  keywords = {Time series data, LSTM, RNN, Predictive Data Analysis},
+  abstract = {Recurrent neural networks (RNNs) and long short-term memory (LSTM) models have demonstrated tremendous effectiveness in modeling time series data due to the ability they possess to capture temporal dependencies. Stock market data is an example of time series data. Stock price data is very volatile and dynamic therefore one of the most turbulent areas to invest in might be the stock market. The choice to buy or sell stocks is heavily influenced by external circumstances and statistical analysis of previous stock performance. Stock price index forecasting has been a major area of research for many years and many machine learning and deep learning methods have been proposed to simplify this hard process, but little success has been discovered so far. In this paper, the application of RNNs and LSTMs on a stock price dataset to predict future values is explored. We start with Recurrent neural networks (RNNs) to predict the values but one of the major challenges with it is the "vanishing gradient" problem, which makes it difficult for the network to learn long-term dependencies in the data. To overcome this long short-term memory (LSTM) was used which eliminates the vanishing gradient problem. Data were normalized and divided into time steps to determine the relationship between past values and future values to make accurate predictions. The outcomes show that the MLS LSTM method significantly outperforms existing algorithms, achieving a prediction accuracy of 98.1% on the training data set and a 91.97% accuracy on the testing data set.}
+}
+
+@article{YUNITA2025103462,
+  title = {Performance analysis of neural network architectures for time series forecasting: A comparative study of RNN, LSTM, GRU, and hybrid models},
+  journal = {MethodsX},
+  volume = {15},
+  pages = {103462},
+  year = {2025},
+  issn = {2215-0161},
+  doi = {https://doi.org/10.1016/j.mex.2025.103462},
+  url = {https://www.sciencedirect.com/science/article/pii/S2215016125003073},
+  author = {Ariana Yunita and MHD Iqbal Pratama and Muhammad Zaki Almuzakki and Hani Ramadhan and Emelia Akashah P. Akhir and Andi Besse {Firdausiah Mansur} and Ahmad Hoirul Basori},
+  keywords = {Neural network, Recurrent neural network, Long short term memory, Gated-recurrent unit, Monte carlo simulation},
+}
+
+@article{SEYEDAN2023100024,
+  author  = {Mahya Seyedan and Fereshteh Mafakheri and Chun Wang},
+  title   = {Order-up-to-level inventory optimization model using time-series demand forecasting with ensemble deep learning},
+  journal = {Supply Chain Analytics},
+  volume  = {3},
+  pages   = {100024},
+  year    = {2023},
+  issn    = {2949-8635},
+  doi     = {10.1016/j.sca.2023.100024},
+  url     = {https://www.sciencedirect.com/science/article/pii/S2949863523000237}
+}
+
+@article{math14050838,
+  author  = {Baráth, Zoltán and Veres, Péter and Bányai, Agota},
+  title   = {Beyond Traditional Forecasting Methods: Evaluating {LSTM} Performance on Diverse Time Series},
+  journal = {Mathematics},
+  volume  = {14},
+  number  = {5},
+  pages   = {838},
+  year    = {2026},
+  issn    = {2227-7390},
+  url     = {https://www.mdpi.com/2227-7390/14/5/838}
+}
+
+@misc{novello2022,
+  author       = {Paul Novello and Gaël Poëtte and David Lugato and Pietro Marco Congedo},
+  title        = {Goal-Oriented Sensitivity Analysis of Hyperparameters in Deep Learning},
+  year         = {2022},
+  howpublished = {arXiv preprint arXiv:2207.06216},
+  url          = {https://arxiv.org/abs/2207.06216},
+  note         = {Acesso em: 11 maio 2026}
+}
+
+@misc{wang2024,
+  author       = {Zhengguang Wang},
+  title        = {Validation, Robustness, and Accuracy of Perturbation-Based Sensitivity Analysis Methods for Time-Series Deep Learning Models},
+  year         = {2024},
+  howpublished = {arXiv preprint arXiv:2401.16521},
+  url          = {https://arxiv.org/abs/2401.16521},
+  note         = {Acesso em: 11 maio 2026}
+}
+
+@article{Divyani2025,
+  author  = {Sen, Divyani},
+  title   = {Explainable Deep Learning for Time Series Analysis: Integrating {SHAP} and {LIME} in {LSTM}-Based Models},
+  journal = {Journal of Information Systems Engineering and Management},
+  volume  = {10},
+  pages   = {412--423},
+  year    = {2025},
+  month   = {3},
+  doi     = {10.52783/jisem.v10i16s.2627}
+}
+
+@misc{guan2024,
+  author       = {Huixin Guan},
+  title        = {Assessing Simplification Levels in Neural Networks: The Impact of Hyperparameter Configurations on Complexity and Sensitivity},
+  year         = {2024},
+  howpublished = {arXiv preprint arXiv:2409.16086},
+  url          = {https://arxiv.org/abs/2409.16086},
+  note         = {Acesso em: 11 maio 2026}
+}
+
+% ---------------------------------------------------------------
+% NOVAS REFERÊNCIAS (recuperadas a partir do PDF compilado)
+% ---------------------------------------------------------------
+
+@article{Elman1990,
+  author  = {Elman, Jeffrey L.},
+  title   = {Finding structure in time},
+  journal = {Cognitive Science},
+  volume  = {14},
+  number  = {2},
+  pages   = {179--211},
+  year    = {1990},
+  url     = {https://onlinelibrary.wiley.com/doi/abs/10.1207/s15516709cog1402_1}
+}
+
+@article{Gers2000,
+  author  = {Gers, Felix A. and Schmidhuber, Jürgen and Cummins, Fred},
+  title   = {Learning to forget: Continual prediction with {LSTM}},
+  journal = {Neural Computation},
+  volume  = {12},
+  number  = {10},
+  pages   = {2451--2471},
+  year    = {2000}
+}
+
+@misc{Bandara2021,
+  author       = {Bandara, Kasun and Hyndman, Rob J. and Bergmeir, Christoph},
+  title        = {{MSTL}: A Seasonal-Trend Decomposition Algorithm for Time Series with Multiple Seasonal Patterns},
+  year         = {2021},
+  howpublished = {arXiv preprint arXiv:2107.13462},
+  url          = {https://arxiv.org/abs/2107.13462}
+}
+
+@article{Poette2026,
+  author  = {Poette, Michaël and others},
+  title   = {Benchmarking imputation strategies for missing time-series data in critical care using real-world-inspired scenarios},
+  journal = {Scientific Reports},
+  volume  = {16},
+  number  = {1},
+  pages   = {8116},
+  year    = {2026},
+  issn    = {2045-2322},
+  doi     = {10.1038/s41598-026-39035-z},
+  url     = {https://doi.org/10.1038/s41598-026-39035-z}
+}
+
+@misc{Wang2025imputation,
+  author       = {Wang, Jun and others},
+  title        = {Deep Learning for Multivariate Time Series Imputation: A Survey},
+  year         = {2025},
+  howpublished = {arXiv preprint arXiv:2402.04059},
+  url          = {https://arxiv.org/abs/2402.04059}
+}
+
+@misc{Wang2026survey,
+  author       = {Wang, Yuxuan and others},
+  title        = {Deep Time Series Models: A Comprehensive Survey and Benchmark},
+  year         = {2026},
+  howpublished = {arXiv preprint arXiv:2407.13278},
+  url          = {https://arxiv.org/abs/2407.13278}
+}
+
+@article{Haneuse2021,
+  author  = {Haneuse, Sebastien and Arterburn, David and Daniels, Michael},
+  title   = {Assessing missing data assumptions in {EHR}-based studies: a complex and underappreciated task},
+  journal = {JAMA Network Open},
+  volume  = {4},
+  pages   = {e210184},
+  year    = {2021},
+  month   = {2}
+}
+
+@article{Makridakis2022,
+  author  = {Makridakis, Spyros and Spiliotis, Evangelos and Assimakopoulos, Vassilios},
+  title   = {The {M5} accuracy competition: Results, findings, and conclusions},
+  journal = {International Journal of Forecasting},
+  volume  = {38},
+  number  = {4},
+  pages   = {1346--1364},
+  year    = {2022},
+  issn    = {0169-2070},
+  note    = {Special Issue: M5 competition},
+  url     = {https://www.sciencedirect.com/science/article/pii/S0169207021001874}
+}
+
+@article{Vollmer2021,
+  author  = {Vollmer, Michael A. C. and others},
+  title   = {A unified machine learning approach to time series forecasting applied to demand at emergency departments},
+  journal = {BMC Emergency Medicine},
+  volume  = {21},
+  number  = {1},
+  pages   = {9},
+  year    = {2021},
+  issn    = {1471-227X},
+  doi     = {10.1186/s12873-020-00395-y}
+}
+
+@article{Petsis2022,
+  author  = {Petsis, Sotiris and others},
+  title   = {Forecasting and explaining emergency department visits in a public hospital},
+  journal = {Journal of Intelligent Information Systems},
+  volume  = {59},
+  year    = {2022},
+  month   = {5}
+}
+
+@article{Chen2026,
+  author  = {Chen, Xin and others},
+  title   = {Knowledge graph-enhanced deep learning for pharmaceutical demand forecasting},
+  journal = {Scientific Reports},
+  volume  = {16},
+  year    = {2026}
+}
+
+@misc{SBIm2026,
+  author  = {{Sociedade Brasileira de Imunizações (SBIm)}},
+  title   = {Vírus sincicial respiratório (VSR)},
+  year    = {2026},
+  url     = {https://familia.sbim.org.br/doencas/virus-sincicial-respiratorio-vsr},
+  note    = {Acesso em: 23 ago. 2026}
+}
+
+@article{Xu2025,
+  author  = {Xu, Tao and others},
+  title   = {Forecasting hospital drug demand for demand patterns with changepoints},
+  journal = {IISE Transactions on Healthcare Systems Engineering},
+  volume  = {15},
+  pages   = {1--18},
+  year    = {2025},
+  month   = {7}
+}
+
+@article{Barrow2026,
+  author  = {Barrow, Devon and others},
+  title   = {Drug demand forecasting for hospital pharmacies using temporal hierarchies},
+  journal = {Journal of the Operational Research Society},
+  pages   = {1--18},
+  year    = {2026},
+  month   = {2}
+}
+
+@misc{RENAME2024,
+  author = {{Ministério da Saúde}},
+  title  = {Relação Nacional de Medicamentos Essenciais (RENAME)},
+  year   = {2024},
+  url    = {https://bvsms.saude.gov.br/bvs/publicacoes/relacao_nacional_medicamentos_2024.pdf},
+  note   = {Acesso em: 23 ago. 2026}
+}
+
+@misc{ATCDDD2026,
+  author = {{WHO Collaborating Centre for Drug Statistics Methodology (ATC/DDD)}},
+  title  = {{ATC/DDD} Index 2026},
+  year   = {2026},
+  url    = {https://atcddd.fhi.no/atc_ddd_index/},
+  note   = {Acesso em: 23 ago. 2026}
+}
+
+@misc{Zdravkovic2020,
+  author       = {Zdravković, Milan},
+  title        = {Pharma Sales Data},
+  year         = {2020},
+  howpublished = {Kaggle},
+  url          = {https://www.kaggle.com/ds/466126},
+  note         = {Acesso em: 23 ago. 2026}
+}
+
+@article{Hyndman2006,
+  author  = {Hyndman, Rob J. and Koehler, Anne B.},
+  title   = {Another look at measures of forecast accuracy},
+  journal = {International Journal of Forecasting},
+  volume  = {22},
+  number  = {4},
+  pages   = {679--688},
+  year    = {2006}
+}
+
+% ---------------------------------------------------------------
+% EXEMPLOS DE ARTIGOS EM ANAIS DE EVENTOS
+% Formato ABNT: SOBRENOME, Nome. Titulo. In: EVENTO, Local. Anais. Editora, Ano.
+% ---------------------------------------------------------------
+
+% Artigo em congresso nacional
+@inproceedings{Oliveira2023,
+  author    = {Ana Paula Oliveira and Carlos Eduardo Ferreira},
+  title     = {Uma abordagem baseada em microsserviços para sistemas de e-commerce},
+  booktitle = {Anais do Simpósio Brasileiro de Engenharia de Software},
+  year      = {2023},
+  address   = {Campo Grande},
+  pages     = {112--121},
+  publisher = {SBC},
+  doi       = {10.5753/sbes.2023.00015}
+}
+
+% Artigo em congresso internacional
+@inproceedings{Chen2016,
+  author    = {Tianqi Chen and Carlos Guestrin},
+  title     = {{XGBoost}: A Scalable Tree Boosting System},
+  booktitle = {Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
+  year      = {2016},
+  address   = {San Francisco},
+  pages     = {785--794},
+  publisher = {ACM},
+  doi       = {10.1145/2939672.2939785}
+}
+
+
+% ---------------------------------------------------------------
+% EXEMPLOS DE DISSERTACOES E TESES
+% Formato ABNT: SOBRENOME, Nome. Titulo. Ano. Dissertacao/Tese - Instituicao, Local, Ano.
+% ---------------------------------------------------------------
+
+% Dissertação de mestrado
+@mastersthesis{Santos2021,
+  author  = {Pedro Henrique Santos},
+  title   = {Análise de desempenho de algoritmos de aprendizado de máquina aplicados à detecção de fraudes em transações financeiras},
+  school  = {Universidade de São Paulo},
+  year    = {2021},
+  address = {São Paulo},
+  type    = {Dissertação (Mestrado em Ciência da Computação)}
+}
+
+% Tese de doutorado
+@phdthesis{Ferreira2019,
+  author  = {Juliana Cristina Ferreira},
+  title   = {Modelos de deep learning para processamento de linguagem natural em português brasileiro},
+  school  = {Universidade Estadual de Campinas},
+  year    = {2019},
+  address = {Campinas},
+  type    = {Tese (Doutorado em Ciência da Computação)}
+}
+
+
+% ---------------------------------------------------------------
+% EXEMPLOS DE SITES E RECURSOS ONLINE
+% Formato ABNT: AUTOR ou ORGANIZACAO. Titulo. Ano. Disponivel em: URL. Acesso em: data.
+% ---------------------------------------------------------------
+
+% Site institucional
+@misc{IBGE2024,
+  author = {{IBGE}},
+  title  = {Pesquisa Nacional por Amostra de Domicílios Contínua -- {PNAD} Contínua},
+  year   = {2024},
+  url    = {https://www.ibge.gov.br/estatisticas/sociais/trabalho/9171-pesquisa-nacional-por-amostra-de-domicilios-continua-mensal.html},
+  note   = {Acesso em: 15 jan. 2025}
+}
+
+% Documentação técnica online
+@misc{ReactDocs2025,
+  author = {{Meta}},
+  title  = {React -- A JavaScript library for building user interfaces},
+  year   = {2025},
+  url    = {https://react.dev},
+  note   = {Acesso em: 20 jan. 2025}
+}
+
+% Artigo em blog técnico
+@misc{Fowler2014,
+  author = {Martin Fowler},
+  title  = {Microservices: a definition of this new architectural term},
+  year   = {2014},
+  url    = {https://martinfowler.com/articles/microservices.html},
+  note   = {Acesso em: 10 fev. 2025}
+}
+
+
+% ---------------------------------------------------------------
+% EXEMPLOS DE MANUAIS E DOCUMENTACAO TECNICA
+% Formato ABNT: ORGANIZACAO. Titulo. Local, Ano.
+% ---------------------------------------------------------------
+
+@manual{ABNT2018,
+  organization = {{Associação Brasileira de Normas Técnicas}},
+  title        = {{NBR} 6023: informação e documentação --- referências --- elaboração},
+  year         = {2018},
+  address      = {Rio de Janeiro}
+}
+
+@manual{ISO25010,
+  organization = {{International Organization for Standardization}},
+  title        = {{ISO/IEC} 25010:2011 --- Systems and software engineering --- Systems and software Quality Requirements and Evaluation ({SQuaRE}) --- System and software quality models},
+  year         = {2011},
+  address      = {Geneva}
+}
+
+% ---------------------------------------------------------------
+% NOVAS ENTRADAS — copiar para o final do bibliografia.bib
+% (escopo PNI / imunobiológicos)
+% ---------------------------------------------------------------
+
+@phdthesis{Lopes2022,
+  author  = {Lopes, Juliano Mar{\c{c}}al},
+  title   = {Stochastic optimization and machine learning applied in the demand forecast, allocation and distribution of vaccines between {Brazilian} states},
+  school  = {Escola Polit{\'e}cnica, Universidade de S{\~a}o Paulo},
+  address = {S{\~a}o Paulo},
+  year    = {2022},
+  type    = {Doutorado em Engenharia El{\'e}trica},
+  url     = {https://www.teses.usp.br/teses/disponiveis/3/3143/tde-05092022-095859/}
+}
+
+@article{Hariharan2020,
+  author  = {Hariharan, Ramkumar and Sundberg, Johnna and Gallino, Giacomo and Schmidt, Ashley and Arenth, Drew and Sra, Suvrit and Fels, Benjamin},
+  title   = {An interpretable predictive model of vaccine utilization for {Tanzania}},
+  journal = {Frontiers in Artificial Intelligence},
+  volume  = {3},
+  pages   = {559617},
+  year    = {2020},
+  doi     = {10.3389/frai.2020.559617}
+}
+
+@misc{BrasilPNIDados,
+  author        = {{BRASIL. Minist{\'e}rio da Sa{\'u}de}},
+  title         = {Doses aplicadas pelo {Programa Nacional de Imuniza{\c{c}}{\~o}es} ({PNI})},
+  howpublished  = {API de Dados Abertos do Minist{\'e}rio da Sa{\'u}de / OpenDataSUS},
+  year          = {2026},
+  url           = {https://apidadosabertos.saude.gov.br/v1/},
+  urlaccessdate = {4 out. 2026}
+}
+
+@misc{BrasilCalendario2026,
+  author        = {{BRASIL. Minist{\'e}rio da Sa{\'u}de}},
+  title         = {Calend{\'a}rio de vacina{\c{c}}{\~a}o},
+  year          = {2026},
+  url           = {https://www.gov.br/saude/pt-br/vacinacao/calendario},
+  urlaccessdate = {4 out. 2026}
+}
+
+@misc{BrasilNT412024,
+  author       = {{BRASIL. Minist{\'e}rio da Sa{\'u}de}},
+  title        = {Nota {T}{\'e}cnica n{\textordmasculine} 41/2024-{CGICI/DPNI/SVSA/MS}: atualiza{\c{c}}{\~a}o das recomenda{\c{c}}{\~o}es da vacina{\c{c}}{\~a}o contra {HPV}},
+  howpublished = {Bras{\'i}lia: Minist{\'e}rio da Sa{\'u}de},
+  year         = {2024}
+}
+
+
+% ===============================================================
+% DICAS PARA O ALUNO:
+% ===============================================================
+% 1. Use chaves consistentes (ex: Sobrenome+Ano: Wazlawick2020)
+% 2. Preencha todos os campos obrigatórios para cada tipo
+% 3. Para sites, sempre inclua a data de acesso no campo "note"
+% 4. Use {} ao redor de siglas e nomes próprios para preservar
+%    a capitalização (ex: {IBGE}, {XGBoost})
+% 5. Para autores corporativos, use chaves duplas: {{Nome}}
+% 6. Compile com: pdflatex -> bibtex -> pdflatex -> pdflatex
+% ===============================================================

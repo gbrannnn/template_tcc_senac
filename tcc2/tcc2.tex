@@ -2,6 +2,8 @@
 % TEMPLATE TCC2 - SENAC SANTO AMARO
 % ---------------------------------------------------------------
 % Trabalho de Conclusão de Curso 2
+% Conteúdo do TCC1 encaixado nas seções correspondentes do template.
+% Pontos que exigem atenção de Gabriel: comentários "% TODO(Gabriel): ..."
 % ---------------------------------------------------------------
 
 \documentclass[
@@ -26,6 +28,9 @@
 \usepackage{multirow}
 \usepackage{longtable}
 \usepackage{amsmath,amssymb}
+\usepackage{tabularx}                % Tabelas com largura automática (vindo do TCC1)
+\usepackage{tikz}                    % Diagramas: pipeline e quadrante (vindo do TCC1)
+\usetikzlibrary{arrows.meta,positioning,calc}
 \usepackage[brazilian,hyperpageref]{backref}
 \usepackage[alf]{abntex2cite}
 
@@ -47,11 +52,11 @@
 }
 \makeatother
 
-\titulo{Título do TCC2}
-\autor{Nome Completo do Aluno}
+\titulo{Análise de sensibilidade de uma RNN para previsão de demanda de imunobiológicos do Programa Nacional de Imunizações}
+\autor{Gabriel Brandão Vechani de Freitas}
 \local{São Paulo}
-\data{2025}
-\orientador{Prof. Nome do Orientador}
+\data{2026}
+\orientador{Prof. Douglas Baquião}
 \tipotrabalho{Trabalho de Conclusão de Curso II}
 \instituicao{%
   SENAC -- Serviço Nacional de Aprendizagem Comercial
@@ -74,6 +79,8 @@
 \imprimircapa
 \imprimirfolhaderosto
 
+% TODO(Gabriel): o resumo do TCC1 ainda estava com placeholders ([descrever ...]); portanto
+% o resumo/abstract abaixo permanece o do template e deve ser escrito ao final do TCC2.
 \begin{resumo}
 Este documento apresenta o TCC2 com base na estrutura recomendada por Raul Sidnei Wazlawick em \textit{Metodologia de Pesquisa para Ciência da Computação}. O foco está em evidenciar problema, objetivos, método, desenvolvimento, resultados e contribuição, evitando textos meramente descritivos.
 \end{resumo}
@@ -87,123 +94,596 @@ This document follows the TCC structure proposed by Wazlawick for Computer Scien
 
 \textual
 
-% ---------------------------------------------------------------
+% ===============================================================
 % INTRODUÇÃO
-% ---------------------------------------------------------------
+% ===============================================================
 \chapter{Introdução}
+\label{cap:introducao}
 
 \section{Contextualização do problema}
-Descreva o cenário atual e a lacuna identificada, embasando o texto em dados, estatísticas, políticas ou práticas profissionais. Evite narrativas históricas extensas e mantenha o foco no problema.
+\label{sec:contexto}
 
-Para citar a orientação do autor, use `\citeonline{Wazlawick2020}` quando precisar reproduzir uma afirmação direta sobre metodologia. Ao resumir outros trabalhos, integre as ideias ao seu texto e utilize `\cite{Silva2022}` como exemplo de citação indireta.
+O gerenciamento de estoques é de grande importância para garantir a qualidade e a eficiência nos procedimentos hospitalares, tendo destaque significativo para a qualidade no atendimento e execução de processos. Para os hospitais, os estoques desempenham um papel fundamental, pois viabilizam a prestação de serviços aos pacientes, e principalmente, para a assistência. Ao realizar acompanhamentos de forma lógica e estratégica há uma tendência de o nível de prejuízos e desvios ser inferior. Para que a empresa ou instituição alcance um bom desempenho, é necessário, principalmente, o acompanhamento das rotinas executadas diariamente e a auditoria dos processos de estoque \citeonline{Hiaretto2021}. Uma má gestão da cadeia de abastecimento pode resultar em excesso de insumos, custos fora do orçamento e falta de itens essenciais para o atendimento. Por isso, é essencial administrar e controlar as entradas e saídas de insumos necessários para o atendimento nas instituições, mantendo o funcionamento das operações, mas com foco em menor estoque possível. Neste contexto, a instituição é desafiada cotidianamente a manter a previsibilidade de compra e consumo para que não haja desperdícios e nem falta \citeonline{Paulo2024}.
+
+Com o aumento da complexidade dos sistemas de saúde e da demanda por insumos, o planejamento de estoques torna-se um dos grandes desafios enfrentados pelas instituições públicas, sendo capaz de criar gargalos em toda a cadeia de abastecimento. Esse desafio é particularmente evidente na cadeia de imunobiológicos do Programa Nacional de Imunizações (PNI), que abastece mais de 38 mil salas de vacinação em todo o território nacional com produtos perecíveis, que exigem conservação sob temperatura controlada, em geral entre 2~°C e 8~°C, e cuja aquisição precisa ser planejada com seis meses a um ano de antecedência, em razão da capacidade limitada dos laboratórios produtores \cite{Lopes2022}. Nesse cenário, a subestimação da demanda pode levar ao desabastecimento e à redução da cobertura vacinal, enquanto a superestimação resulta em perdas de doses \cite{Hariharan2020}. Para \citeonline{Thiago2025}, é justamente nesse ponto que a Inteligência Artificial (IA) vem assumindo um papel transformador, oferecendo um novo patamar de precisão e eficiência na operação logística hospitalar, perspectiva que se estende a outras cadeias de suprimento em saúde, como a de imunobiológicos.
+
+Tendo isso como base, este trabalho tem como foco analisar a aplicação de uma Rede Neural Recorrente (RNN) na previsão da demanda por imunobiológicos do PNI, mensurada pelo número de doses aplicadas registradas no Sistema de Informação do Programa Nacional de Imunizações (SI-PNI), com destaque na análise de sensibilidade do modelo de aprendizado de máquina, realizando variações nos parâmetros de entrada e observando sua relevância no contexto aplicado por meio das técnicas SHAP e LIME. O estudo concentra-se em quatro imunobiológicos, BCG, hepatite B, influenza e HPV, aplicados nos estados de São Paulo e da Bahia, recorte que reúne séries com padrões de demanda distintos, desde a vacinação de rotina vinculada aos nascimentos até campanhas anuais e mudanças de esquema vacinal. Como arquitetura, adota-se a Long Short-Term Memory (LSTM), devido à sua capacidade de aprender dependências de longo prazo em dados sequenciais por meio de mecanismos de memória, característica relevante para séries influenciadas por sazonalidades, campanhas e mudanças estruturais. O objetivo é compreender se esse tipo de modelo pode contribuir para o aprimoramento do planejamento de estoques de imunobiológicos, auxiliando na redução de danos tanto por excesso quanto por falta de doses.
+
+Uma abordagem promissora reside na aplicação de técnicas de Deep Learning (DL), que têm demonstrado potencial para otimizar os processos de gestão da cadeia de abastecimento. Alguns estudos têm explorado a utilização de algoritmos de Machine Learning (ML) para resolver problemas de previsão de demanda, apresentando assim alternativas para melhorar a eficiência e a rentabilidade das cadeias de produção farmacêuticas e hospitalares \citeonline{SIERRAESPINEL20252791}. No caso específico dos imunobiológicos, os estudos identificados empregam predominantemente modelos baseados em árvores de decisão, como Random Forest e Gradient Boosting \cite{Hariharan2020,Lopes2022}, de modo que a aplicação de Redes Neurais Recorrentes (RNN) a esse domínio ainda é pouco explorada, especialmente no que diz respeito à análise de sensibilidade do modelo a variações nos parâmetros de entrada.
+
+Os imunobiológicos constituem itens críticos da cadeia de suprimentos em saúde: são perecíveis, dependem de uma rede de frio para preservar sua eficácia, e sua indisponibilidade na sala de vacinação representa uma oportunidade de vacinação perdida, com impacto direto sobre a cobertura vacinal da população \cite{Lopes2022,Hariharan2020}. Apesar dessa criticidade, a estimativa de demanda ainda se apoia, com frequência, em projeções populacionais desatualizadas e em modelos de baixa dimensionalidade \cite{Hariharan2020} e, no caso brasileiro, é conduzida de forma manual por técnicos a partir de indicadores de saúde pública e dados demográficos \cite{Lopes2022}, abordagens que nem sempre conseguem capturar os padrões complexos e dinâmicos da demanda.
+
+As RNN têm vasta capacidade para lidar com séries temporais, aprendendo padrões temporais e melhorando a precisão das previsões \citeonline{AGARWAL2024979}. No entanto, no contexto da gestão de imunobiológicos, a sua utilização com esse objetivo não está difundida, principalmente no que se refere à análise de sensibilidade aos parâmetros.
 
 \section{Formulação do problema}
-Coloque o problema em forma de pergunta clara, delimitando o que será investigado e qual resultado se espera atingir dentro da Computação.
+\label{sec:formulacao}
 
--\section{Objetivos e hipótese}
+% TODO(Gabriel): o TCC1 não trazia a pergunta de pesquisa escrita de forma explícita. A pergunta
+% abaixo foi derivada do objetivo principal e da Seção "Contexto"; revise a redação.
+Como variações controladas nos parâmetros de entrada (tamanho da janela temporal, ruído e proporção de valores faltantes) e nos hiperparâmetros estruturais (dropout, número de camadas, número de unidades e taxa de aprendizado) de um modelo LSTM afetam seu desempenho preditivo na previsão da demanda mensal de doses aplicadas de imunobiológicos do PNI, e quais entradas exercem maior influência sobre essas previsões, de modo a indicar se esse tipo de modelo pode contribuir para o planejamento de estoques de imunobiológicos?
+
+\section{Objetivos e hipótese}
+\label{sec:objetivos}
+
 \subsection{Objetivo geral}
-Declare o propósito principal do TCC2 em uma frase direta, conectando-o ao problema e deixando claro se o foco é compreender, comparar, validar ou propor algo novo.
+
+Este estudo tem como objetivo avaliar o uso de uma Rede Neural Recorrente (RNN), com arquitetura LSTM, para a previsão de demanda de imunobiológicos do Programa Nacional de Imunizações, investigando de forma sistemática como variações controladas em seus parâmetros de entrada e hiperparâmetros impactam o desempenho preditivo do modelo.
+
+Mais especificamente, busca-se analisar a sensibilidade de um modelo LSTM aplicado à previsão de demanda de imunobiológicos do PNI, expressa pelo número mensal de doses aplicadas por município, mensurando o impacto de variações controladas em parâmetros de entrada (tamanho da janela temporal, presença de ruído nas séries e proporção de valores faltantes) e em hiperparâmetros estruturais (dropout, número de camadas, número de unidades e taxa de aprendizado) sobre o desempenho preditivo do modelo, avaliado por meio das métricas Erro Absoluto Médio (MAE), Raiz do Erro Quadrático Médio (RMSE), Erro Percentual Absoluto Médio (MAPE) e Erro Absoluto Escalado Médio (MASE), bem como pela variabilidade dessas métricas frente às perturbações aplicadas.
 
 \subsection{Objetivos específicos}
-Liste objetivos mensuráveis que estruturam o plano de trabalho. Tente utilizar verbos como revisar, comparar, modelar, quantificar ou validar. Exemplos:
-\begin{itemize}
-    \item Revisar obras-chave sobre [tema] e identificar lacunas;
-    \item Modelar ou prototipar a abordagem proposta;
-    \item Implementar experimentos controlados;
-    \item Avaliar o desempenho por métricas (ex.: acurácia, latência).
-\end{itemize}
+\label{sec:objetivos_secundarios}
+
+Com base no objetivo geral serão definidos os objetivos específicos, que descrevem as etapas e ações necessárias para realizá-lo.
+
+\begin{enumerate}
+    \item Investigar, na literatura especializada, as principais técnicas de análise de sensibilidade aplicáveis a modelos de aprendizado profundo voltados a séries temporais, identificando aquelas mais adequadas ao contexto da previsão de demanda de imunobiológicos;
+    \item Caracterizar a base pública de doses aplicadas do PNI no recorte definido (BCG, hepatite B, influenza e HPV nos estados de São Paulo e da Bahia), descrevendo seus atributos, limitações e o tratamento necessário (filtragem de registros, agregação temporal e espacial dos microdados, tratamento de lacunas, normalização e segmentação em conjuntos de treino, validação e teste) para sua utilização no treinamento do modelo;
+    \item Definir o ambiente computacional de experimentação, justificando a escolha das ferramentas, bibliotecas (como TensorFlow ou PyTorch) e recursos de hardware adotados, de modo a garantir a reprodutibilidade dos experimentos e o controle sobre os fatores externos ao modelo;
+    \item Implementar e treinar um modelo LSTM de referência (baseline) para previsão de demanda de imunobiológicos, documentando sua arquitetura, processo de treinamento e desempenho preditivo nas métricas adotadas, de modo a estabelecer um ponto de comparação para os experimentos de sensibilidade;
+    \item Definir e aplicar um protocolo experimental, aplicando perturbações controladas aos parâmetros de entrada e hiperparâmetros previamente definidos e registrando, de forma sistemática, o desempenho do modelo sob cada cenário;
+    \item Utilizar técnicas de análise de sensibilidade, como SHAP e LIME, para interpretar os resultados do modelo e identificar quais entradas têm maior impacto no desempenho preditivo;
+    \item Analisar e discutir os resultados obtidos, identificando quais parâmetros exercem maior influência sobre o desempenho preditivo do modelo e quais cenários representam maior risco para a aplicação prática no planejamento de estoques de imunobiológicos, apontando limitações do estudo e direções para trabalhos futuros.
+\end{enumerate}
 
 \subsection{Hipótese ou critério de validação}
-Descreva a hipótese que será testada ou o critério usado para afirmar que o objetivo geral foi atingido. Caso não haja hipótese formal, explique como as métricas escolhidas demonstrarão o sucesso esperado.
+\label{sec:hipotese}
+
+O trabalho não adota uma hipótese formal; o sucesso da solução é avaliado em duas frentes, por meio de critérios de validação. Na primeira, relativa à qualidade do modelo de referência, espera-se que o baseline apresente desempenho superior ao de um preditor ingênuo, critério verificável por meio do MASE, considerado satisfatório quando inferior a 1. Na segunda frente, relativa ao objetivo central do trabalho, a validação se dá pela própria análise de sensibilidade: a solução será considerada bem-sucedida se permitir quantificar de forma sistemática a variação das métricas (MAE, RMSE, MAPE e MASE) sob cada perturbação, identificar quais parâmetros exercem maior influência sobre o desempenho preditivo e caracterizar os cenários que representam maior risco para a aplicação prática no planejamento de estoques de imunobiológicos. A consistência dos resultados será reforçada pela fixação de sementes aleatórias e pela repetição das execuções, de modo a distinguir o efeito das perturbações do ruído decorrente da inicialização do modelo.
 
 \section{Justificativa}
-Ressalte a importância do problema para a Computação, destacando contribuições acadêmicas, sociais ou industriais. Explique como a proposta evita se tornar um “manual de ferramenta”.
+\label{sec:justificativa}
 
-% ---------------------------------------------------------------
+A previsão de demanda por imunobiológicos apresenta desafios particulares, decorrentes da combinação de componentes regulares, como a vacinação de rotina vinculada às coortes de nascimento, com componentes episódicos, como campanhas sazonais e alterações de esquema vacinal definidas pelo Ministério da Saúde. Métodos tradicionais, como médias históricas e modelos estatísticos simples, mostram-se limitados na captura dos padrões dinâmicos que caracterizam séries de demanda dessa natureza, o que motiva a investigação de técnicas de aprendizado de máquina mais adequadas a esse cenário \cite{math14050838}. Nesse contexto, este trabalho propõe a aplicação de uma RNN com arquitetura LSTM para a previsão da demanda por imunobiológicos, com ênfase na análise de sensibilidade do modelo frente a variações em seus parâmetros de entrada, buscando compreender de forma sistemática como tais variações influenciam seu desempenho preditivo.
+
+Do ponto de vista acadêmico, embora as RNNs e a arquitetura LSTM sejam amplamente investigadas em tarefas de previsão de séries temporais, sua aplicação à previsão de demanda de imunobiológicos ainda é pouco explorada na literatura. Os trabalhos identificados nesse domínio recorrem a modelos baseados em árvores de decisão \cite{Lopes2022}, e \citeonline{Hariharan2020} relatam ter descartado as redes recorrentes testadas por não alcançarem desempenho comparável e por produzirem previsões de difícil interpretação, sem que o comportamento dessas redes tenha sido examinado sob diferentes configurações ou condições dos dados. Mais incipiente ainda é a investigação sobre o impacto que variações nos parâmetros de entrada exercem sobre o desempenho preditivo nesse domínio, lacuna observada nos trabalhos relacionados analisados nesta pesquisa, que avaliam o desempenho de seus modelos sem submetê-los a perturbações controladas em suas entradas. Compreender esse comportamento é relevante porque os registros de vacinação estão sujeitos a digitação tardia, a registros incompletos e à vacinação de pessoas fora de seu município de residência \cite{Lopes2022}, além de oscilações abruptas decorrentes de campanhas, o que torna a robustez do modelo um critério tão importante quanto sua acurácia média. Assim, este estudo contribui para preencher essa lacuna ao oferecer uma análise sistemática da sensibilidade do modelo à variabilidade dos dados, combinada a técnicas de explicabilidade que endereçam a limitação de interpretabilidade apontada na literatura.
+
+Do ponto de vista profissional, a imprecisão na previsão de demanda por imunobiológicos impacta diretamente a operação da rede de imunização e gera consequências em duas frentes. Por um lado, o excesso de doses resulta em desperdício financeiro e em perdas por vencimento ou por falhas na rede de frio, em um contexto no qual unidades federativas podem apresentar excesso de um produto enquanto outras enfrentam sua falta no mesmo período \cite{Lopes2022}. Por outro lado, a falta compromete a oferta de vacinas à população e reduz a cobertura vacinal \cite{Hariharan2020}. Uma ferramenta preditiva mais precisa e cujo comportamento seja conhecido frente a variações nos dados oferece aos gestores uma base mais sólida para a tomada de decisão, contribuindo simultaneamente para a eficiência operacional e para a efetividade do programa de imunização.
+
+Por fim, o uso de dados públicos e anonimizados do PNI, disponibilizados pelo Ministério da Saúde \cite{BrasilPNIDados}, para o treinamento do modelo reforça o potencial de replicabilidade e escalabilidade da abordagem proposta, permitindo sua extensão a outros imunobiológicos e unidades federativas.
+
+% ===============================================================
 % REVISÃO BIBLIOGRÁFICA
-% ---------------------------------------------------------------
+% ===============================================================
 \chapter{Revisão Bibliográfica / Trabalhos Relacionados}
+\label{cap:revisao}
+
+Este capítulo tem como objetivo apresentar o embasamento teórico do trabalho, organizando os principais conceitos e temas de forma a construir uma linha de argumentação que sustente a proposta desenvolvida.
 
 \section{Fundamentos teóricos necessários}
-Explique os conceitos essenciais, definindo termos e equações quando necessário. Utilize blocos de texto ou pequenos quadros comparativos para sintetizar modelos.
+\label{sec:referencial}
 
-Um exemplo de citação direta poderia ser `\citeonline{Silva2022}` para reforçar que determinados métodos exigem validação empírica; uma citação indireta pode ser escrita como “vários estudos destacam ...” seguido de `\cite{Wazlawick2020}`.
+\subsection{Gestão de Estoques em Saúde e a Cadeia de Imunobiológicos}
+\label{subsec:gestao_estoques}
+
+A gestão de estoque em ambientes hospitalares é um processo crítico e essencial para garantir a continuidade e qualidade de sistemas de saúde. Como característica hospitalar é lidar com uma grande variedade de itens, que possuem data de validade, alta criticidade e demanda frequentemente variável. Nesse contexto, a falta de determinado item pode comprometer diretamente o atendimento ao paciente. Por outro lado o excesso de estoque pode resultar em desperdício e aumento de custos. Sendo assim, o sistema logístico hospitalar deve ser eficientemente planejado e coordenado, conforme relatado por \citeonline[p.~68]{Claudia2021}.
+
+Entre as cadeias de suprimento em saúde, a de imunobiológicos apresenta particularidades que ampliam esses desafios. No Brasil, o PNI, instituído em 1973 e posteriormente integrado ao Sistema Único de Saúde (SUS), é responsável pela aquisição, armazenamento e distribuição de vacinas a uma rede de mais de 38 mil salas de vacinação \cite{Lopes2022}. Por se tratar de produtos perecíveis e sensíveis à temperatura, os imunobiológicos dependem de uma rede de frio contínua, e as perdas podem ocorrer tanto por falhas de conservação quanto pela chamada perda técnica, associada à abertura de frascos multidose para um número de pessoas inferior ao de doses disponíveis. Somam-se a isso o longo horizonte de planejamento das compras, que exige que a demanda seja estimada com meses de antecedência, e a fragmentação dos sistemas de informação, que dificulta a consolidação dos dados de consumo \cite{Lopes2022}.
+
+Em complemento, o uso de tecnologias e técnicas avançadas, como o aprendizado de máquina, tem se mostrado promissor para otimizar a gestão de estoques em saúde. A capacidade de prever a demanda com maior precisão pode ajudar a reduzir tanto o excesso quanto a falta de insumos, melhorando a eficiência operacional e a qualidade do atendimento ao paciente. No entanto, a aplicação dessas técnicas ainda é um campo em desenvolvimento, especialmente no que diz respeito à análise de sensibilidade dos modelos preditivos utilizados, assim como descrito por \citeonline{SIERRAESPINEL20252791}.
+
+\subsection{Redes Neurais Recorrentes e LSTMs para Séries Temporais}
+\label{subsec:rnn_lstm}
+
+Uma rede neural recorrente (RNN) é um tipo de rede neural projetada para processar entradas sequenciais, como séries temporais, sendo amplamente utilizada em aprendizado de máquina por sua capacidade de gerar conclusões e previsões a partir desses dados. Seu mecanismo de aprendizagem é baseado na retropropagação, adaptada para redes compostas por unidades semelhantes a neurônios. A arquitetura conta com camadas ocultas dotadas de conexões recorrentes, nas quais a saída de uma camada é realimentada como entrada para ela mesma. Esse mecanismo permite que a rede mantenha um estado interno capaz de capturar e preservar informações sobre o histórico da sequência processada, conforme descrito por \citeonline{Elman1990}. O procedimento ajusta repetidamente os pesos das conexões na rede de modo a minimizar uma medida da diferença entre o vetor de saída real da rede e o vetor de saída desejado, segundo \citeonline{Rumelhart1986}.
+
+% TODO(Gabriel): reinserir aqui o arquivo de imagem original (diagrama de ajuste de pesos).
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.75\textwidth}{\centering\vspace{2.2cm}\textit{[Reinserir imagem: diagrama de ajuste de peso entre neurônios]}\vspace{2.2cm}}}
+    \caption{A imagem ilustra um sistema simples de ajuste de peso entre os neurônios, \citeonline{Rumelhart1986}}
+    \label{fig:rumelhart}
+\end{figure}
+
+Podendo ser usada para previsão de demanda, classificação de texto, reconhecimento de fala, entre outros. As RNNs são capazes de capturar dependências temporais em dados sequenciais, o que as torna adequadas para tarefas como previsão de séries temporais, onde os padrões podem se estender por longos intervalos de tempo. No entanto, as RNNs tradicionais enfrentam dificuldades para aprender dependências de longo prazo devido ao problema do desvanecimento do gradiente, o que limita sua eficácia em tarefas que exigem a retenção de informações por períodos prolongados.
+
+A arquitetura Long Short-Term Memory (LSTM) é um tipo de RNN projetada para lidar com o problema do desvanecimento do gradiente, permitindo que a rede aprenda dependências de longo prazo em dados sequenciais \citeonline{Hochreiter1997}. Diferentemente de uma RNN tradicional, cada célula LSTM mantém um estado de célula (cell state), uma memória de longo prazo que percorre a sequência e cujo conteúdo é regulado por três mecanismos de controle de fluxo denominados portas (gates): a porta de entrada (input gate), que define quais novas informações são incorporadas ao estado de célula; a porta de esquecimento (forget gate), que determina quais informações do estado anterior devem ser descartadas; e a porta de saída (output gate), que controla qual parcela do estado é exposta como saída da célula no instante corrente.
+
+% TODO(Gabriel): reinserir aqui o arquivo de imagem original (ilustração da célula LSTM).
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.75\textwidth}{\centering\vspace{2.2cm}\textit{[Reinserir imagem: ilustração da arquitetura LSTM]}\vspace{2.2cm}}}
+    \caption{Simples ilustração da arquitetura LSTM, representando a estrutura de memória e os mecanismos de controle de fluxo, \citeonline{Hochreiter1997}}
+    \label{fig:lstmcell}
+\end{figure}
+
+É essa regulação seletiva manter, atualizar ou descartar informações que permite à LSTM preservar dependências por períodos prolongados sem que o gradiente se dissipe ao longo do tempo, tornando-a especialmente adequada a tarefas como a previsão de séries temporais, nas quais os padrões podem se estender por longos intervalos. Cabe registrar que a formulação original \citeonline{Hochreiter1997} contemplava apenas as portas de entrada e de saída, tendo a porta de esquecimento sido introduzida posteriormente por \citeonline{Gers2000}, configuração que corresponde à forma da arquitetura amplamente utilizada na atualidade. No domínio deste estudo, a previsão de demanda de imunobiológicos, essa capacidade de capturar padrões temporais complexos é crucial para melhorar a precisão das previsões e otimizar o gerenciamento de suprimentos.
+
+\subsection{Previsão de Ruptura e Níveis de Estoque}
+\label{subsec:ruptura}
+
+A previsão de ruptura de estoque (stockout), refere-se à antecipação do momento em que o nível de um item disponível torna-se insuficiente para atender à demanda. No contexto da imunização, esse evento é particularmente crítico, pois a ausência do imunobiológico na sala de vacinação resulta em oportunidades de vacinação perdidas e na redução da cobertura vacinal \cite{Hariharan2020}. Para mitigar esse risco, a literatura de gestão de operações estabelece dois conceitos fundamentais que orientam a política de reposição: o estoque de segurança (safety stock), entendido como a quantidade adicional mantida em estoque para absorver variações na demanda e nos prazos de entrega, e o ponto de pedido (reorder point), definido como o nível de estoque a partir do qual uma nova ordem de reposição deve ser emitida, calculado tradicionalmente como a soma entre a demanda esperada durante o tempo de espera e o estoque de segurança. A precisão desses parâmetros depende diretamente da qualidade da previsão de demanda subjacente, uma vez que estimativas imprecisas geram tanto excesso de estoque, com custos financeiros e risco de vencimento, quanto rupturas, com prejuízos operacionais e clínicos.
+
+Tradicionalmente, esses cálculos têm sido realizados por meio de fórmulas estatísticas que assumem distribuições conhecidas da demanda e do tempo de espera, o que pode ser limitante em cadeias de saúde marcadas por demandas intermitentes, sazonalidades, campanhas e eventos epidemiológicos. Para superar essas restrições, estudos recentes têm proposto integrar modelos de aprendizado profundo, especialmente arquiteturas recorrentes como a LSTM, ao processo de previsão de demanda que alimenta o cálculo do estoque de segurança e do ponto de pedido. Trabalhos como o de \citeonline{SEYEDAN2023100024} demonstram que abordagens baseadas em Aprendizado em Conjunto (ensemble) com LSTM podem melhorar a acurácia das previsões e, consequentemente, permitir a definição dinâmica dos níveis de estoque sob diferentes cenários de tempo de espera. Entretanto, conforme apontam \citeonline{math14050838}, em séries com baixa razão sinal-ruído, modelos LSTM treinados com função de perda quadrática, Erro Quadrático Médio (MSE), tendem a suavizar picos de demanda, o que pode resultar em subestimação sistemática e em cálculos enviesados do estoque de segurança, aumentando o risco de ruptura. Esse comportamento reforça a necessidade de avaliar não apenas a acurácia média do modelo, mas também sua sensibilidade frente a variações nas entradas, especialmente quando suas previsões alimentam decisões logísticas com impacto direto sobre a operação da rede de imunização.
+
+\subsection{Análise de Sensibilidade e Robustez em Modelos de IA}
+\label{subsec:sensibilidade}
+
+A análise de sensibilidade em modelos de inteligência artificial consiste no estudo sistemático de como variações controladas em parâmetros ou entradas do modelo afetam suas saídas, sendo um instrumento essencial para avaliar a estabilidade, a interpretabilidade e a confiabilidade de soluções baseadas em aprendizado profundo. No contexto de redes neurais, essa análise pode ser conduzida em duas frentes principais: a sensibilidade a hiperparâmetros, que examina o impacto de escolhas estruturais, como número de camadas, taxa de aprendizado, função de ativação e dimensão de janela temporal sobre o desempenho preditivo \citeonline{novello2022}; e a sensibilidade aos dados de entrada, que avalia a resposta do modelo frente a perturbações aplicadas às variáveis da série temporal, sejam elas ruídos, valores faltantes ou alterações em variáveis específicas \citeonline{wang2024}. Já o conceito de robustez é frequentemente associado à capacidade do modelo de manter desempenho estável diante dessas perturbações, sendo, portanto, uma propriedade verificada a partir da análise de sensibilidade. Em séries temporais, essas avaliações são particularmente relevantes, pois pequenas variações em parâmetros como tamanho da janela de entrada ou taxa de regularização podem alterar significativamente a capacidade do modelo de capturar padrões temporais complexos.
+
+Entre as técnicas mais utilizadas para conduzir esse tipo de análise, destacam-se métodos baseados em perturbação direta das entradas com medição da variação na saída, conforme descrito por \citeonline{guan2024}, índices estatísticos como o critério HSIC (Hilbert-Schmidt Independence Criterion) aplicado à exploração do espaço de hiperparâmetros, conforme citado por \citeonline{novello2022}, e abordagens de explicabilidade como SHAP (SHapley Additive exPlanations). Quando aplicadas a modelos LSTM, essas técnicas permitem identificar quais janelas temporais e quais variáveis exercem maior influência sobre a previsão, fornecendo subsídios para a interpretação e o aprimoramento do modelo, conforme explicado por \citeonline{Divyani2025}. Além disso, estudos de ablação, em que componentes do modelo ou subconjuntos de features são removidos para observar o impacto no desempenho, complementam a avaliação ao expor possíveis dependências críticas. No contexto da previsão de demanda de imunobiológicos, a aplicação dessas técnicas é especialmente pertinente, pois os registros de vacinação costumam apresentar ruídos, digitação tardia, registros incompletos e padrões irregulares decorrentes de campanhas e de eventos epidemiológicos, fatores que tornam a análise de sensibilidade um requisito tanto técnico quanto operacional para garantir confiabilidade nas decisões logísticas baseadas no modelo.
+
+\subsection{Pré-processamento de Séries Temporais e Imputação de Dados}
+\label{subsec:preprocessamento}
+
+O pré-processamento de séries temporais compreende um conjunto de etapas fundamentais que precedem a modelagem preditiva, incluindo normalização, verificação de estacionariedade, remoção de outliers e decomposição da série em seus componentes estruturais. Em séries temporais reais, a não estacionariedade é um desafio recorrente, uma vez que propriedades estatísticas como média e variância variam ao longo do tempo, dificultando a generalização de modelos de aprendizado profundo, como citado por \citeonline{Wang2026survey}. Técnicas como diferenciação, decomposição sazonal e normalização por instância têm sido amplamente utilizadas para mitigar esses efeitos, permitindo que os modelos capturem padrões temporais com maior fidelidade. A decomposição STL (Seasonal-Trend decomposition using LOESS) destaca-se por sua versatilidade e robustez, sendo aplicada como etapa de pré-processamento em combinação com modelos de aprendizado de máquina para melhorar o desempenho preditivo, como demonstrado em \citeonline{Bandara2021}.
+
+A imputação de dados ausentes é etapa crítica no tratamento de séries temporais, especialmente em contextos onde falhas de registro eletrônico são frequentes. Relações temporais são afetadas quando valores ausentes são simplesmente ignorados, pois padrões sazonais podem ser obscurecidos, tornando imprescindível a adoção de estratégias de imputação mais sofisticadas, mostrado por \citeonline{Poette2026}. Além das abordagens tradicionais como média, mediana e LOCF (last observation carried forward), modelos de aprendizado profundo têm demonstrado crescente capacidade para imputação de séries temporais multivariadas, com redes neurais recorrentes e arquiteturas baseadas em Transformers se destacando nos benchmarks recentes, demonstrado em \citeonline{Wang2025imputation}. A escolha do método de imputação deve considerar o mecanismo de ausência dos dados (MCAR, MAR ou MNAR) e a estrutura temporal da série, pois abordagens inadequadas podem introduzir viés sistemático nos resultados, demonstrado por \citeonline{Haneuse2021}.
+
+\subsection{Métricas de Desempenho e Erro}
+\label{subsec:metricas}
+
+A avaliação quantitativa de modelos preditivos em séries temporais depende da escolha criteriosa de métricas de erro que reflitam adequadamente a natureza do problema. As métricas mais comuns incluem o Erro Absoluto Médio (MAE), a Raiz do Erro Quadrático Médio (RMSE) e o Erro Percentual Absoluto Médio (MAPE): o RMSE é preferido quando erros maiores devem ser penalizados com mais intensidade, enquanto o MAPE expressa o erro como percentual dos valores reais, facilitando a comparação entre séries de diferentes escalas, como citado em \citeonline{Makridakis2022}. Cada métrica apresenta limitações específicas: o MAPE é problemático quando os valores reais se aproximam de zero, situação frequente em demandas intermitentes, e apresenta assimetria ao penalizar mais fortemente as superestimações do que as subestimações.
+
+O MASE (Erro Médio Absoluto Escalonado) tem ganhado espaço como alternativa robusta, especialmente por sua capacidade de comparar desempenhos entre séries de diferentes escalas sem ser afetado por valores nulos, sendo considerado superior ao benchmark ingênuo quando seu valor é inferior a 1, citado em \citeonline{Makridakis2022}. Em contextos aplicados à saúde, a escolha da métrica deve também considerar as implicações operacionais dos erros: superestimações e subestimações da demanda em saúde têm custos assimétricos, o excesso de provisão gera desperdício de recursos, enquanto a subestimação compromete a qualidade do atendimento \citeonline{Vollmer2021}. A avaliação de precisão não deve se restringir à etapa final da modelagem, mas estar integrada ao longo de todo o fluxo de trabalho, incluindo seleção de modelos, ajuste de hiperparâmetros e monitoramento contínuo em produção.
+
+\subsubsection{Erro Absoluto Médio (MAE)}
+\label{subsec:mae}
+
+\begin{equation}
+\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|y_i - \hat{y}_i\right|
+\end{equation}
+
+Mede a média dos valores absolutos dos erros, onde $y_i$ é o valor real, $\hat{y}_i$ é o valor previsto e $n$ é o número de observações. Por usar o valor absoluto, todos os erros têm o mesmo peso, independentemente do sinal. O resultado fica na mesma unidade da variável original, o que facilita a interpretação. É robusto a outliers, já que não eleva os erros ao quadrado.
+
+\subsubsection{Raiz do Erro Quadrático Médio (RMSE)}
+\label{subsec:rmse}
+
+\begin{equation}
+\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(y_i - \hat{y}_i\right)^2}
+\end{equation}
+
+É a raiz quadrada da média dos erros elevados ao quadrado. Como os erros são elevados ao quadrado antes de serem somados, o RMSE penaliza mais fortemente os erros grandes, ou seja, é mais sensível a outliers do que o MAE. A raiz quadrada final devolve o resultado à mesma unidade da variável original. Sempre vale a relação RMSE $\geq$ MAE.
+
+\subsubsection{Erro Percentual Absoluto Médio (MAPE)}
+\label{subsec:mape}
+
+\begin{equation}
+\text{MAPE} = \frac{100\%}{n}\sum_{i=1}^{n}\left|\frac{y_i - \hat{y}_i}{y_i}\right|
+\end{equation}
+
+Expressa o erro como uma porcentagem média em relação aos valores reais, o que o torna adimensional e útil para comparar o desempenho entre conjuntos de dados de escalas diferentes. Tem duas limitações importantes: fica indefinido quando algum $y_i = 0$ e tende a penalizar de forma assimétrica, pesando mais as previsões que superestimam do que as que subestimam.
+
+\subsubsection{Erro Absoluto Escalado Médio (MASE)}
+\label{subsec:mase}
+
+Para a fórmula, precisamos definir duas quantidades. O erro do modelo no instante $i$ é:
+
+\begin{equation}
+e_i = y_i - \hat{y}_i
+\end{equation}
+
+E o erro médio absoluto do preditor ingênuo sazonal (naive com período $m$), calculado in-sample sobre $T$ observações de treinamento, é:
+
+\begin{equation}
+\text{MAE}_{\text{naive}} = \frac{1}{T-m}\sum_{t=m+1}^{T}\left|y_t - y_{t-m}\right|
+\end{equation}
+
+O MASE é então definido como \cite{Hyndman2006}:
+
+\begin{equation}
+\text{MASE} = \frac{1}{n}\sum_{i=1}^{n}\frac{\left|e_i\right|}{\text{MAE}_{\text{naive}}} = \dfrac{\dfrac{1}{n}\displaystyle\sum_{i=1}^{n}\left|y_i - \hat{y}_i\right|}{\dfrac{1}{T-m}\displaystyle\sum_{t=m+1}^{T}\left|y_t - y_{t-m}\right|}
+\end{equation}
+
+onde $m$ é o período sazonal da série e $T$ é o número de observações de treinamento. Por ser adimensional e normalizado por um benchmark bem definido, o MASE resolve as duas limitações centrais do MAPE: permanece definido mesmo quando $y_i = 0$, o que é relevante neste trabalho, uma vez que municípios de pequeno porte podem registrar zero doses aplicadas de determinado imunobiológico em alguns meses, e não apresenta a assimetria de penalização observada naquela métrica. Um valor MASE $<$ 1 indica que o modelo supera o preditor ingênuo sazonal; um valor MASE $>$ 1 indica desempenho inferior a ele.
+
+\subsection{Particularidades da Demanda por Imunobiológicos}
+\label{subsec:particularidades}
+
+A demanda por imunobiológicos, expressa pelo número de doses aplicadas, apresenta características estruturais que a distinguem de outras séries de consumo em saúde. Diferentemente da demanda hospitalar por medicamentos, fortemente associada a eventos agudos, a aplicação de vacinas resulta da sobreposição de três processos geradores. O primeiro é a vacinação de rotina, definida pelo Calendário Nacional de Vacinação e vinculada a marcos etários, como as doses de BCG e de hepatite B indicadas ao nascer \cite{BrasilCalendario2026}, o que aproxima a demanda dessas vacinas do número de nascimentos em cada localidade. O segundo são as campanhas, das quais a vacinação anual contra a influenza é o exemplo mais característico: sua realização antecede o período de maior circulação dos vírus respiratórios, concentrado tipicamente no outono e no inverno, ainda que com variações regionais relevantes \cite{SBIm2026}, e produz picos sazonais pronunciados nas séries. O terceiro são as decisões de política pública que alteram o público-alvo ou o número de doses de um esquema, como a adoção da dose única da vacina contra o HPV para pessoas de 9 a 14 anos em 2024 \cite{BrasilNT412024}.
+
+Do ponto de vista da modelagem, cada um desses processos impõe desafios distintos. As alterações de esquema vacinal e de público-alvo configuram pontos de mudança, isto é, mudanças abruptas de patamar em séries não estacionárias, fenômeno que \citeonline{Xu2025} identificaram afetar parcela expressiva dos itens de maior movimentação em uma farmácia hospitalar. O período de 2020 e 2021, marcado pela pandemia de COVID-19 e pela reorganização dos serviços de saúde, constitui outro potencial ponto de mudança, a ser verificado na análise exploratória dos dados. Além disso, \citeonline{Hariharan2020} apontam a ausência de informações sobre campanhas como uma limitação de seu modelo de previsão de utilização de vacinas, o que reforça a importância de considerar a natureza desses eventos na construção das variáveis de entrada.
+
+Há ainda particularidades relacionadas à qualidade dos registros. A digitação das doses aplicadas pode ocorrer com atraso em relação à data da vacinação, e é comum que pessoas sejam vacinadas em município diferente daquele em que residem, o que pode gerar inconsistências quando os dados são agregados geograficamente \cite{Lopes2022}. Esses fatores introduzem ruídos e lacunas nas séries e reforçam a pertinência de avaliar a sensibilidade do modelo a perturbações nos dados de entrada.
+
+\subsection{O Programa Nacional de Imunizações e os imunobiológicos selecionados}
+\label{subsec:pni}
+
+A partir de 2020, os registros de vacinação do SI-PNI passaram a ser disponibilizados de forma individualizada, com um registro por dose aplicada \cite{BrasilPNIDados}. Esses microdados, anonimizados, são publicados pelo Ministério da Saúde no portal OpenDataSUS e por meio de sua API de dados abertos, e contemplam informações sobre a vacina aplicada, a data de aplicação, o estabelecimento de saúde e características demográficas do vacinado. Essa granularidade permite construir séries temporais de demanda em diferentes níveis de agregação, mas exige uma etapa de pré-processamento considerável, descrita na Seção~\ref{sec:conjunto_dados}.
+
+Neste trabalho, foram selecionados quatro imunobiológicos: BCG, hepatite B, influenza e HPV. A escolha busca reunir, em um mesmo estudo, séries com processos geradores distintos (Seção~\ref{subsec:particularidades}): a BCG representa a vacinação de rotina em dose única ao nascer; a hepatite B combina a dose ao nascer com esquemas destinados a adolescentes e adultos não vacinados \cite{BrasilCalendario2026}; a influenza representa a demanda sazonal dirigida por campanhas anuais; e o HPV representa uma série sujeita a mudanças de política, como a adoção da dose única em 2024 \cite{BrasilNT412024}. O recorte geográfico abrange os estados de São Paulo e da Bahia, unidades federativas de grande porte situadas em regiões com perfis demográficos, climáticos e de infraestrutura distintos, o que permite avaliar se a sensibilidade do modelo se mantém entre contextos regionais diferentes.
+
+Essa diversidade de padrões é especialmente adequada aos objetivos deste trabalho. A presença simultânea de séries regulares, sazonais e sujeitas a quebras estruturais cria um cenário no qual arquiteturas recorrentes como a LSTM (Seção~\ref{subsec:rnn_lstm}) podem ser avaliadas sob condições variadas, ao mesmo tempo em que expõe o modelo a perturbações, ruídos e registros incompletos, os quais motivam a análise de sensibilidade proposta. Dessa forma, o recorte adotado não apenas delimita o escopo do estudo, como também oferece um cenário realista e desafiador para avaliar a robustez do modelo frente a variações em seus parâmetros de entrada.
 
 \section{Técnicas, métodos ou abordagens existentes}
-Apresente abordagens já empregadas no contexto e destaque o que funcionou ou falhou. Inclua uma tabela comparativa simples para clarificar diferenças:
+\label{sec:tecnicas_existentes}
+
+Os trabalhos analisados nesta pesquisa recorrem a abordagens distintas para a previsão de demanda e de séries temporais: modelagem econométrica combinada a aprendizado profundo no setor farmacêutico \cite{SIERRAESPINEL20252791}, redes RNN e LSTM aplicadas a séries financeiras \cite{AGARWAL2024979}, comparação de arquiteturas recorrentes simples e híbridas \cite{YUNITA2025103462} e modelos baseados em árvores de decisão para a utilização de vacinas \cite{Hariharan2020,Lopes2022}. A Tabela~\ref{tab:abordagens} sintetiza essas abordagens e suas limitações principais.
+
 \begin{table}[htb]
   \centering
   \caption{Comparativo de abordagens relacionadas}
-  \begin{tabular}{p{4cm}p{3cm}p{4cm}}
+  \label{tab:abordagens}
+  \begin{tabular}{p{4cm}p{3.6cm}p{5.4cm}}
     \toprule
     Abordagem & Domínio & Limitação principal \\
     \midrule
-    Técnica A & IoT & Falta de validação em larga escala \\
-    Técnica B & Redes neurais & Alto custo computacional \\
+    ARIMA + aprendizado profundo (MLOps) & Demanda farmacêutica & Sem análise de sensibilidade \\
+    RNN e LSTM & Cotações de ações & Sem análise de sensibilidade; domínio financeiro \\
+    RNN, LSTM, GRU e modelos híbridos & Séries de astronomia, saúde e maquinaria & Poucos conjuntos de dados; sem perturbações na entrada \\
+    Random Forest (comparado a Gradient Boosting, ARIMA e redes neurais) & Utilização de vacinas & Sem dados de campanhas; sem perturbações na entrada \\
     \bottomrule
   \end{tabular}
-  \legend{Tabela ilustrativa com limitações observadas.}
+  \legend{Fonte: Elaborado pelo autor (2026)}
 \end{table}
 
 \section{Trabalhos correlatos e limitações}
-Liste artigos diretamente relacionados e explique por que cada um não resolve totalmente o problema (ex.: falta de comparação, escopo diferente, dados limitados). Relacione essas lacunas com o que sua pesquisa pretende preencher.
+\label{sec:trabalhos_relacionados}
 
-\textit{Evite a “síndrome da intersecção esquecida”: inclua trabalhos que aplicaram a técnica na mesma área.}
+\subsection{Metodologia da pesquisa bibliográfica}
+\label{sec:metodologia_pesquisa}
 
-% ---------------------------------------------------------------
+A seguir são apresentados os principais tópicos que nortearam a condução desta pesquisa:
+
+\begin{itemize}
+    \item \textbf{Bases de dados consultadas}: Google Scholar, IEEE Xplore, ACM Digital Library, SciELO, Periódicos CAPES, entre outras;
+    \item \textbf{Palavras-chave utilizadas}:
+    \begin{itemize}
+        \item ("critical inventory" OR "critical stock" OR "medical supplies" OR "hospital formulary") AND ("deep learning" OR "neural network" OR "LSTM" OR "RNN") AND ("forecasting" OR "optimization" OR "demand prediction") AND ("hospital" OR "healthcare" OR "pharmaceutical");
+        \item ("LSTM" OR "GRU" OR "recurrent neural network") AND ("time series forecasting" OR "sequential prediction");
+        \item ("inventory management" OR "stock forecasting" OR "demand prediction") AND ("hospital" OR "pharmacy" OR "medical supplies" OR "critical stock");
+        \item ("sensitivity analysis" OR "feature importance" OR "SHAP" OR "Sobol index" OR "ablation study") AND ("neural network" OR "deep learning" OR "machine learning");
+        \item ("vaccine" OR "immunization" OR "immunobiological") AND ("demand forecasting" OR "utilization forecasting") AND ("machine learning" OR "deep learning" OR "LSTM").
+    \end{itemize}
+    \item \textbf{Critérios de inclusão e exclusão}: Os critérios de inclusão adotados para a seleção dos trabalhos foram: publicações nos idiomas português e inglês; trabalhos do tipo científico, como artigos, dissertações, notícias; publicações dos últimos 5 a 6 anos, garantindo a atualidade das referências; e relevância acadêmica, priorizando trabalhos publicados em periódicos indexados, alinhados à temática central da pesquisa;
+    \item \textbf{Período de abrangência}: média de 5 a 6 anos.
+\end{itemize}
+
+A pesquisa bibliográfica foi realizada nas bases Google Scholar, IEEE Xplore, ACM Digital Library, SciELO e Periódicos CAPES, entre outras, utilizando combinações de palavras-chave estruturadas em quatro eixos temáticos: gestão de estoques e cadeias de suprimento em saúde, incluindo a de imunobiológicos, redes neurais recorrentes e aprendizado profundo, previsão de demanda em ambientes de saúde, e análise de sensibilidade em modelos de aprendizado de máquina. Entre as expressões empregadas destacam-se termos como "critical inventory", "LSTM", "demand prediction", "hospital pharmacy", "vaccine demand forecasting", "SHAP" e "LIME", combinados por operadores booleanos para maior precisão na recuperação dos resultados. Foram selecionados artigos publicados predominantemente nos últimos cinco a seis anos, em português e inglês, que abordassem diretamente a aplicação de técnicas de aprendizado profundo com ênfase em arquiteturas recorrentes como LSTM e GRU na previsão e otimização de estoques críticos em contextos hospitalares, farmacêuticos e de imunização. Foram excluídos trabalhos que não apresentassem relação direta com os temas centrais da pesquisa, publicações sem revisão por pares e estudos cujo foco recaísse exclusivamente sobre domínios clínicos sem interface com gestão de suprimentos ou modelagem preditiva.
+
+\subsection{Trabalhos selecionados}
+
+Nesta seção serão apresentados 4 trabalhos selecionados que têm como base o uso de redes neurais recorrentes (RNN/LSTM), aprendizado de máquina e séries temporais, incluindo a previsão de demanda de vacinas, além da análise crítica de seus respectivos resultados. Os trabalhos foram escolhidos seguindo os critérios citados em \ref{sec:metodologia_pesquisa}, contribuindo para a compreensão do estado da arte na área. A seguir, é apresentado um resumo individual de cada um dos trabalhos pesquisados, descrevendo seus objetivos, metodologias adotadas e os principais desafios enfrentados ao longo de seu desenvolvimento.
+
+\subsubsection{Trabalho 1: Applying Deep Learning and Forecasting Techniques to the Pharmaceutical Supply Chain}
+
+\citeonline{SIERRAESPINEL20252791} abordou o problema de melhorar o atendimento aos pacientes através da disponibilidade de medicamentos, como também contribuir para a eficácia operacional no setor da saúde. Para resolvê-lo, os autores propuseram aplicar técnicas de modelação econométrica e estratégias de aprendizagem profunda (DL), com o objetivo de mensurar e gerar previsões com uma boa precisão. A metodologia utilizada foi MLOps (Operações de Aprendizagem Automática), abrangendo princípios de desenvolvimento de software com práticas de gestão de sistemas, onde foi usado para identificação de modelos e estratégias mais adequadas. Já para o modelo econométrico ARIMA, foram utilizados critérios como o Critério de Informação de Akaike (AIC), o Critério de Informação Bayesiano (BIC) e o Critério de Informação de Hannan-Quinn (HQIC), em conjunto ao teste de Ljung-Box. E para avaliar o aprendizado profundo, foram usados o Erro Absoluto Médio (MAE), o Erro Quadrático Médio (MSE) e o Raiz do Erro Quadrático Médio (RMSE).
+
+% TODO(Gabriel): substituir a frase abaixo pelos valores numéricos exatos (MAE, MSE, RMSE, AIC, BIC, HQIC) publicados na tabela de resultados de \citeonline{SIERRAESPINEL20252791}, para permitir comparação direta com os resultados deste trabalho.
+Os resultados mostraram que os dois modelos, o econométrico ARIMA e o de aprendizado profundo (DL), possuem uma eficácia significativa para previsões de demanda de medicamentos, onde em conjunto podem oferecer uma maior precisão nas previsões, resultado demonstrado com o uso dos critérios definidos. No entanto, a solução apresenta limitações como a ausência de análise de sensibilidade nos parâmetros de entrada e a não avaliação da robustez dos modelos frente a perturbações nos dados de entrada. O presente trabalho diferencia-se por fazer uso de uma base pública de doses aplicadas do PNI, tratada para compor séries mensais por município e imunobiológico, e por aplicar testes nos parâmetros de entrada para avaliar como o modelo de aprendizagem de máquina se comporta frente a essas variações.
+
+\subsubsection{Trabalho 2: Predictive Data Analysis: Leveraging RNN and LSTM Techniques for Time Series Dataset}
+
+\citeonline{AGARWAL2024979} abordou o problema de prever valores futuros de cotações no mercado de ações. Para resolvê-lo, os autores propuseram utilizar Redes Neurais Recorrentes (RNN) e Memória de Longo Prazo (LSTM) para gerar previsões a partir de um conjunto de dados, superando o problema do desvanecimento do gradiente com o uso da arquitetura LSTM. A metodologia utilizada foi estruturar a solução em módulos e classes, sendo eles:
+\begin{itemize}
+\item Módulo de pré-processamento de dados: inclui as funções para carregar, limpar e normalizar os dados relativos aos preços das ações;
+\item Módulo de arquitetura do modelo: inclui as funções para construir os modelos RNN e LSTM;
+\item Módulo de treino: inclui as funções para treinar os modelos com base nos dados históricos;
+\item Módulo de previsão: inclui as funções para efetuar previsões sobre os dados de teste e avaliar o desempenho dos modelos.
+\end{itemize}
+Para construir os modelos, os autores utilizaram Python e as bibliotecas Keras e TensorFlow. Para normalizar os dados, foi utilizado o MinMaxScaler da biblioteca sklearn. A separação dos conjuntos de treino e teste foi de 85:15, ou seja, 85\% dos dados foram utilizados para treinar o modelo LSTM e 15\% para teste, com janelas de 100 pontos de dados. O Raiz do Erro Quadrático Médio (RMSE), as medidas R² e as métricas de acurácia foram utilizados para avaliar o desempenho dos modelos.
+
+Os resultados mostraram que o modelo LSTM apresentou desempenho superior ao modelo RNN: o modelo RNN, após 100 épocas, obteve uma acurácia de 97,12\% nos dados de treino e de 81,01\% nos dados de teste, enquanto o modelo LSTM, aplicado ao mesmo conjunto de dados, alcançou 98,10\% nos dados de treino e 91,97\% nos dados de teste. No entanto, assim como o trabalho anterior, a solução apresenta limitações como a ausência de análise de sensibilidade nos parâmetros de entrada, a não avaliação da robustez dos modelos frente a perturbações nos dados e a aplicação restrita ao domínio financeiro, sem contemplar contextos de saúde. O presente trabalho diferencia-se por aplicar métodos de análise de sensibilidade e avaliação da robustez em um modelo preditivo voltado à previsão de demanda de imunobiológicos.
+
+\subsubsection{Trabalho 3: Performance analysis of neural network architectures for time series forecasting: A comparative study of RNN, LSTM, GRU, and hybrid models}
+
+\citeonline{YUNITA2025103462} abordou o problema de avaliar o desempenho de nove arquiteturas de redes neurais para previsão de séries temporais, nomeadamente RNN, LSTM, GRU, RNN-LSTM, RNN-GRU, LSTM-RNN, GRU-RNN, LSTM-GRU e GRU-LSTM. Para resolvê-lo, os autores propuseram uma avaliação baseada no método de Monte Carlo (MC), com o objetivo de garantir a confiabilidade dos resultados frente à variabilidade decorrente da inicialização aleatória dos pesos. A metodologia utilizada consistiu em selecionar três conjuntos de dados nas áreas da astronomia, cuidados de saúde e maquinaria, realizar uma análise exploratória de dados (EDA) como etapa preliminar de avaliação estatística e de qualidade, implementar as diferentes arquiteturas de redes neurais e, por fim, avaliar os modelos por meio de 100 iterações de Monte Carlo, utilizando as métricas de Erro Absoluto Médio (MAE), Erro Percentual Absoluto Médio (MAPE) e Raiz do Erro Quadrático Médio (RMSE).
+
+Os resultados mostraram que, pelo teste de Friedman, não houve diferença estatisticamente significativa entre as arquiteturas avaliadas. Esse resultado pode ter sido influenciado por fatores como a dimensão limitada da amostra, com apenas três conjuntos de dados para avaliação, e o possível mascaramento das diferenças de desempenho pelo ruído experimental. Ainda assim, os padrões de desempenho consistentes observados em todos os conjuntos de dados sugerem potenciais vantagens práticas para as arquiteturas híbridas baseadas em LSTM, especialmente as configurações LSTM-RNN e LSTM-GRU. No entanto, a solução apresenta limitações como o número reduzido de conjuntos de dados utilizados na avaliação, a ausência de investigação sobre o impacto de perturbações nos parâmetros de entrada sobre o desempenho preditivo e a não aplicação dos modelos à gestão de suprimentos em saúde. O presente trabalho diferencia-se por aplicar uma análise de sensibilidade sistemática nos parâmetros de entrada de um modelo LSTM voltado à previsão de demanda de imunobiológicos, investigando como variações nesses parâmetros afetam o desempenho preditivo, parte não explorada por \citeonline{YUNITA2025103462}, que avaliam a robustez apenas em relação à inicialização aleatória dos pesos, sem considerar perturbações nos dados de entrada.
+
+\subsubsection{Trabalho 4: An Interpretable Predictive Model of Vaccine Utilization for Tanzania}
+
+\citeonline{Hariharan2020} abordaram o problema de prever a utilização de vacinas em unidades de saúde, partindo da constatação de que as abordagens vigentes se baseiam em dados populacionais desatualizados e em modelos de baixa dimensionalidade, o que favorece tanto o desabastecimento quanto o desperdício de doses. Para resolvê-lo, os autores propuseram um modelo multivariado de aprendizado de máquina capaz de prever a utilização quinzenal de vacinas por unidade de saúde. A metodologia utilizada consistiu em combinar dados diários de utilização de vacinas de 710 unidades de saúde de três regiões da Tanzânia com variáveis complementares sobre as unidades e suas populações de abrangência, como localização geográfica, altitude, tipo de unidade e população regional, totalizando 32 variáveis. Os dados foram agregados por unidade e tipo de vacina em períodos quinzenais e divididos de forma temporal, com cerca de 70\% destinados ao treinamento e o restante dividido igualmente entre validação e teste. Foram comparados diversos algoritmos, entre eles regressão linear regularizada, máquinas de vetores de suporte, k-vizinhos mais próximos, ARIMA, Gradient Boosting, redes neurais e Random Forest, avaliados pela Raiz do Erro Quadrático Médio (RMSE) e por um erro fracionário definido pelos autores.
+
+Os resultados mostraram que o Random Forest apresentou o melhor desempenho no conjunto de validação, com erro fracionário médio quase 18 vezes inferior ao do sistema de reposição então em uso, e que a média móvel de três meses da utilização foi a variável de maior importância, mensurada por permutação. Os autores relatam ainda que redes neurais, incluindo redes recorrentes, foram testadas, mas não alcançaram desempenho comparável e produziram previsões de difícil interpretação, motivo pelo qual foram descartadas. No entanto, a solução apresenta limitações como a ausência de informações sobre campanhas de vacinação, reconhecida pelos próprios autores, e a não avaliação da robustez do modelo frente a perturbações nos dados de entrada. O presente trabalho diferencia-se por investigar sistematicamente o comportamento de um modelo LSTM nesse domínio, submetendo-o a perturbações controladas e empregando SHAP e LIME para endereçar a limitação de interpretabilidade que levou ao descarte das redes recorrentes por \citeonline{Hariharan2020}.
+
+\subsection{Posicionamento deste trabalho em relação aos correlatos}
+
+Posicionamento acadêmico dos trabalhos relacionados:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.0]
+        \draw[-Stealth] (0,0) -- (8.2,0);
+        \draw[-Stealth] (0,0) -- (0,6.2);
+        \draw[dashed, gray] (4,0) -- (4,6);
+        \draw[dashed, gray] (0,3) -- (8,3);
+        \node[font=\small\itshape] at (4,-0.7) {Foco em domínio de saúde $\rightarrow$};
+        \node[font=\small\itshape, rotate=90] at (-1.0,3) {$\uparrow$ Análise de sensibilidade};
+        \filldraw[gray!60] (1.6,1.3) circle (7pt);
+        \node[font=\scriptsize, below=5pt] at (1.6,1.3) {T2 (ações)};
+        \filldraw[gray!60] (5.8,1.5) circle (7pt);
+        \node[font=\scriptsize, below=5pt] at (5.8,1.5) {T1 (farma)};
+        \filldraw[gray!60] (7.3,2.0) circle (7pt);
+        \node[font=\scriptsize, above=5pt] at (7.3,2.0) {T4 (vacinas)};
+        \filldraw[gray!60] (4.6,3.8) circle (7pt);
+        \node[font=\scriptsize, above=5pt] at (4.6,3.8) {T3 (multi)};
+        \filldraw[blue!70!black] (6.3,5.2) circle (10pt);
+        \node[font=\small\bfseries, above=6pt] at (6.3,5.2) {Este trabalho};
+    \end{tikzpicture}
+    \caption{A imagem ilustra o posicionamento acadêmico deste trabalho em relação aos trabalhos relacionados}
+    \label{fig:posicionamento}
+\end{figure}
+
+Uma tabela comparativa ajuda a sintetizar as diferenças entre os trabalhos:
+
+\begin{table}[htb]
+    \centering
+    \caption{Comparação entre trabalhos relacionados}
+    \label{tab:trabalhos_relacionados}
+
+    \footnotesize
+    \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.9cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X}
+        \toprule
+        \textbf{Critério} & \textbf{Trabalho 1} & \textbf{Trabalho 2} & \textbf{Trabalho 3} & \textbf{Trabalho 4} & \textbf{Este trabalho} \\
+        \midrule
+        Objetivo
+        & Previsão de demanda farmacêutica
+        & Previsão de cotações de ações
+        & Comparação de arquiteturas RNN, LSTM e GRU
+        & Previsão da utilização de vacinas por unidade de saúde
+        & Análise de sensibilidade de LSTM para demanda de imunobiológicos \\
+
+        \midrule
+
+        Tecnologia
+        & ARIMA + DL (MLOps)
+        & RNN + LSTM (Keras/TensorFlow)
+        & RNN, LSTM, GRU, modelos híbridos
+        & Random Forest (comparado a GB, ARIMA, redes neurais)
+        & LSTM + análise de sensibilidade + SHAP/LIME \\
+
+        \midrule
+
+        Validação
+        & MAE, MSE, RMSE, AIC, BIC
+        & RMSE, R², acurácia
+        & MAE, MAPE, RMSE (Monte Carlo)
+        & RMSE, erro fracionário, comparação com sistema vigente
+        & MAE, RMSE, MAPE e MASE \\
+
+        \midrule
+
+        Limitação
+        & Sem análise de sensibilidade
+        & Sem análise de sensibilidade; domínio financeiro
+        & Poucos datasets; sem perturbações na entrada
+        & Sem dados de campanhas; sem perturbações na entrada
+        & Recorte de quatro imunobiológicos e duas UFs \\
+
+        \midrule
+        Métricas
+        & AIC, BIC, HQIC, MAE, MSE e RMSE
+        & RMSE
+        & MAE, MAPE e RMSE
+        & RMSE e erro fracionário
+        & MAE, RMSE, MAPE e MASE \\
+
+        \bottomrule
+    \end{tabularx}
+
+    \legend{Fonte: Elaborado pelo Gabriel Brandão (2026)}
+\end{table}
+
+% ===============================================================
 % METODOLOGIA
-% ---------------------------------------------------------------
+% ===============================================================
 \chapter{Metodologia}
+\label{cap:metodologia}
 
 \section{Tipo de pesquisa e hipótese}
-Informe qual tipo de pesquisa será conduzido (exploratória, empírica, formal etc.) e registre as hipóteses que serão avaliadas. Caso não haja hipótese formal, descreva o critério de sucesso esperado.
+
+Adota-se uma abordagem experimental e incremental. O desenvolvimento parte da construção do pipeline de dados e do modelo de referência (baseline); somente após a validação do baseline os experimentos de sensibilidade são executados, um fator por vez a partir da configuração de referência, de modo a isolar o efeito de cada variação. Essa estratégia evita a explosão combinatória de cenários e mantém a interpretabilidade dos resultados. O ciclo de trabalho é iterativo: cada experimento é executado, registrado e analisado antes do planejamento do seguinte, em consonância com a recomendação da literatura de integrar a avaliação de desempenho ao longo de todo o fluxo, e não apenas à etapa final.
+
+Por não haver hipótese formal, o critério de sucesso esperado é o descrito na Seção~\ref{sec:hipotese}: MASE do baseline inferior a 1 e quantificação sistemática da variação das métricas sob cada perturbação.
 
 \section{Procedimentos da abordagem proposta}
-Detalhe etapas da metodologia em ordem cronológica. Use listas numeradas, diagramas de fluxo ou pseudocódigo para tornar o processo claro.
+\label{sec:procedimentos}
+
+Os procedimentos seguem, em ordem cronológica, as etapas do pipeline experimental ilustrado na Figura~\ref{fig:pipeline}:
+
+\begin{enumerate}
+    \item \textbf{Coleta de dados}: obtenção dos microdados de doses aplicadas do PNI (SI-PNI);
+    \item \textbf{Pré-processamento}: filtragem, agregação mensal por município e imunobiológico, normalização, construção das janelas temporais (sliding window) e segmentação em treino, validação e teste;
+    \item \textbf{Baseline LSTM}: treinamento e validação do modelo de referência, com critério MASE $<$ 1;
+    \item \textbf{Experimentos de sensibilidade}: perturbações controladas, um fator por vez a partir da configuração de referência (janela temporal, ruído, dados faltantes e hiperparâmetros);
+    \item \textbf{Explicabilidade}: aplicação de SHAP e LIME, com atribuição de importância às variáveis e janelas temporais;
+    \item \textbf{Consolidação dos resultados}: tabelas, gráficos e análise comparativa dos cenários.
+\end{enumerate}
 
 \section{Ferramentas, tecnologias e ambientes}
-Liste softwares, linguagens, bibliotecas, frameworks e ambientes (laboratórios, nuvem, simulação) que serão usados. Justifique a escolha com base no problema e nas métricas.
+\label{subsec:tecnologias}
+
+A implementação será realizada em linguagem Python, pela maturidade de seu ecossistema para aprendizado de máquina e por sua adoção nos trabalhos relacionados analisados. Para a construção e o treinamento do modelo LSTM, prevê-se o uso de Keras, utilizado por \citeonline{AGARWAL2024979}. O pré-processamento e o cálculo de métricas apoiam-se nas bibliotecas scikit-learn (normalização e métricas), pandas e NumPy (manipulação de dados). Dado o volume dos microdados do PNI, a leitura será realizada em blocos (chunks), com filtragem dos registros antes da agregação, de modo a viabilizar o processamento em máquina local. As análises de explicabilidade utilizarão as bibliotecas SHAP e LIME, e a visualização dos resultados, Matplotlib e Seaborn. Para etapas opcionais de decomposição de séries (por exemplo, STL), pode-se recorrer ao statsmodels.
+
+A experimentação será conduzida em ambiente de máquina local: Intel(R) Core(TM) i5-14600KF (3,50 GHz) CPU; 16,0 GB RAM; NVIDIA GeForce RTX 5060 (8 GB) GPU, com versionamento das dependências e fixação de sementes aleatórias, de modo a garantir a reprodutibilidade dos experimentos e o controle sobre fatores externos ao modelo, conforme previsto no objetivo específico 3 (Seção~\ref{sec:objetivos_secundarios}).
 
 \section{Procedimentos experimentais e métricas}
-Explique como os experimentos serão configurados, quais variáveis serão controladas e quais métricas demonstram que a proposta cumpre os objetivos (ex.: acurácia, latência, custo). Inclua tabelas que antecipem o plano de coleta, por exemplo:
+\label{sec:proc_experimentais}
+
+Os experimentos de sensibilidade aplicam perturbações controladas sobre o modelo de referência, registrando as métricas resultantes e sua variabilidade. Nos parâmetros de entrada, prevê-se a variação do tamanho da janela temporal, a injeção de ruído nas séries e a variação da proporção de valores faltantes. Nos hiperparâmetros estruturais, prevê-se a variação do número de camadas, do número de unidades, da taxa de aprendizado e da taxa de dropout (0,0; 0,1; 0,2; 0,3), avaliando o impacto da regularização estocástica sobre a estabilidade das previsões. Cada cenário é executado de forma isolada a partir do modelo de referência.
+
+O desempenho é calculado sobre o conjunto de teste pelas métricas MAE, RMSE, MAPE e MASE (Seção~\ref{subsec:metricas}), registradas de forma padronizada a cada execução para posterior comparação. A Tabela~\ref{tab:plano_experimentos} apresenta o plano de experimentação.
+
 \begin{table}[htb]
   \centering
   \caption{Plano de experimentação}
-  \begin{tabular}{lccc}
+  \label{tab:plano_experimentos}
+  \begin{tabular}{p{4.2cm}p{5.8cm}p{3cm}}
     \toprule
     Experimento & Variável controlada & Métrica principal \\
     \midrule
-    Comparação com baseline & algoritmo & acurácia \\
-    Escalabilidade & carga & tempo médio \\
+    Comparação com baseline & Modelo de referência vs. preditor ingênuo sazonal & MASE \\
+    Janela temporal & Tamanho do look-back & MAE, RMSE, MAPE, MASE \\
+    Ruído & Injeção de ruído nas séries & MAE, RMSE, MAPE, MASE \\
+    Dados faltantes & Proporção de valores faltantes & MAE, RMSE, MAPE, MASE \\
+    Hiperparâmetros & Camadas, unidades, taxa de aprendizado e dropout & MAE, RMSE, MAPE, MASE \\
     \bottomrule
   \end{tabular}
-  \legend{Exemplo de como documentar experimentos.}
+  \legend{Fonte: Elaborado pelo autor (2026)}
 \end{table}
 
-\textit{Propor algo não basta: demonstre como será validado.}
+\section{Critérios de validação}
 
-% ---------------------------------------------------------------
+O baseline é considerado satisfatório quando seu MASE é inferior a 1. A validação do objetivo central ocorre pela quantificação sistemática da variação das métricas sob cada perturbação, conforme detalhado na Seção~\ref{sec:hipotese}. A consistência dos resultados será reforçada pela fixação de sementes aleatórias e pela repetição das execuções.
+
+% ===============================================================
 % DESENVOLVIMENTO
-% ---------------------------------------------------------------
+% ===============================================================
 \chapter{Desenvolvimento / Implementação / Experimentos}
+\label{cap:desenvolvimento}
 
 \section{Modelagem e arquitetura}
-Apresente diagramas (UML, blocos ou fluxogramas) que mostram como os módulos se relacionam, identificando componentes críticos e como eles atendem ao problema e à metodologia.
+\label{sec:solucao}
+
+A solução proposta neste trabalho não consiste em um sistema de software voltado ao usuário final, mas em um pipeline experimental reproduzível para treinamento, avaliação e análise de sensibilidade de um modelo de Rede Neural Recorrente com arquitetura Long Short-Term Memory (LSTM) aplicado à previsão de demanda de imunobiológicos do PNI, expressa pelo número mensal de doses aplicadas por município. O objetivo central do pipeline é, a partir de um modelo de referência (baseline), submeter o modelo a perturbações controladas em seus parâmetros de entrada e hiperparâmetros estruturais e mensurar, de forma sistemática, o impacto dessas variações sobre o desempenho preditivo, avaliado pelas métricas MAE, RMSE, MAPE e MASE, e sobre a importância atribuída às variáveis e instantes temporais, avaliada por meio das técnicas de explicabilidade SHAP e LIME.
+
+\subsection{Arquitetura}
+\label{subsec:arquitetura}
+
+A solução é organizada de forma modular, de modo que cada etapa do fluxo seja isolada, parametrizável e reexecutável. Os módulos previstos e suas interações são:
+
+\subsubsection{Módulo de aquisição e pré-processamento de dados}
+
+Responsável por obter os microdados de doses aplicadas do PNI (Seção~\ref{sec:conjunto_dados}) e transformá-los em séries temporais aptas ao treinamento. Para isso, realiza a filtragem dos registros válidos e do recorte de imunobiológicos e unidades federativas, a agregação mensal das doses por município e imunobiológico, o preenchimento dos meses sem registro, o tratamento de valores ausentes (imputação), a normalização por série (por exemplo, Min-Max via \texttt{MinMaxScaler}), a verificação de estacionariedade e a construção das janelas temporais (sliding window). Esse módulo também realiza a segmentação dos dados em conjuntos de treino, validação e teste, respeitando a ordem cronológica das observações.
+
+\subsubsection{Módulo de definição do modelo}
+
+Encapsula a construção da arquitetura LSTM, expondo como parâmetros configuráveis o número de camadas, o número de unidades, a taxa de aprendizado e a taxa de dropout (aplicada tanto às conexões de entrada quanto às conexões recorrentes), de modo a permitir variações controladas nos experimentos posteriores.
+
+\subsubsection{Módulo de treinamento}
+
+Executa o treinamento do modelo a partir dos dados de treino e validação, com controle de épocas, early stopping e fixação de sementes aleatórias para garantir reprodutibilidade.
+
+\subsubsection{Módulo de avaliação}
+
+Calcula as métricas de desempenho (MAE, RMSE, MAPE e MASE) sobre o conjunto de teste, registrando os resultados de cada execução de forma padronizada para posterior comparação.
+
+\subsubsection{Módulo de experimentos de sensibilidade}
+
+Coordena a aplicação das perturbações controladas. Nos parâmetros de entrada, prevê-se a variação do tamanho da janela temporal, a injeção de ruído nas séries e a variação da proporção de valores faltantes. Nos hiperparâmetros estruturais, prevê-se a variação do número de camadas, do número de unidades, da taxa de aprendizado e da taxa de dropout (0,0; 0,1; 0,2; 0,3), avaliando o impacto da regularização estocástica sobre a estabilidade das previsões. Cada cenário é executado de forma isolada a partir do modelo de referência, registrando-se as métricas resultantes e sua variabilidade.
+
+\subsubsection{Módulo de explicabilidade}
+
+Aplica as técnicas SHAP e LIME ao modelo treinado, identificando quais variáveis e janelas temporais exercem maior influência sobre as previsões, complementando a análise de sensibilidade por perturbação com uma perspectiva de atribuição.
+
+\subsubsection{Módulo de registro e análise de resultados}
+
+Consolida os resultados de todas as execuções, gera tabelas e visualizações comparativas e dá suporte à discussão sobre quais fatores representam maior risco para a aplicação prática.
+
+A interação entre os módulos segue um fluxo sequencial: os dados pré-processados alimentam o modelo, que é treinado e avaliado para estabelecer o baseline. Em seguida, o módulo de experimentos reexecuta o ciclo sob diferentes perturbações; por fim, os módulos de explicabilidade e de análise consolidam os resultados. Segue uma ilustração do fluxo por meio de um diagrama, demonstrativo na Figura~\ref{fig:pipeline}:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        node distance=7mm and 6mm,
+        box/.style={draw, rounded corners, align=center, minimum width=7.4cm, minimum height=1cm, font=\small, inner sep=4pt},
+        subbox/.style={draw, rounded corners, align=center, minimum width=3.0cm, minimum height=1.5cm, font=\scriptsize, inner sep=3pt},
+        arr/.style={-Stealth, thick}
+    ]
+        \node[box, fill=gray!15] (p1) {\textbf{Passo 1 -- Coleta de dados}\\Microdados de doses aplicadas do PNI (SI-PNI)};
+        \node[box, fill=gray!15, below=of p1] (p2) {\textbf{Passo 2 -- Pré-processamento}\\Filtragem $\cdot$ agregação mensal por município e imunobiológico\\normalização $\cdot$ sliding window $\cdot$ segmentação treino/val/teste};
+        \node[box, fill=blue!12, below=of p2] (p3) {\textbf{Passo 3 -- Baseline LSTM}\\Treinamento $\cdot$ validação $\cdot$ critério MASE $<$ 1};
+        \node[box, fill=orange!15, below=9mm of p3, minimum height=1.3cm] (p4) {\textbf{Passo 4 -- Experimentos de sensibilidade}\\um fator por vez a partir da configuração de referência};
+
+        \node[subbox, fill=orange!10, below=1.2cm of p4, xshift=-5.1cm] (janela) {\textbf{Janela temporal}\\Variação do look-back};
+        \node[subbox, fill=orange!10, right=4mm of janela] (ruido) {\textbf{Ruído}\\Injeção nas séries};
+        \node[subbox, fill=orange!10, right=4mm of ruido] (faltantes) {\textbf{Dados faltantes}\\Proporção de missings};
+        \node[subbox, fill=orange!10, right=4mm of faltantes] (hiper) {\textbf{Hiperparâmetros}\\Camadas $\cdot$ units $\cdot$ dropout};
+
+        \node[box, fill=green!12, below=1.4cm of janela.south -| p4] (p5) {\textbf{Passo 5 -- Explicabilidade}\\SHAP $\cdot$ LIME $\cdot$ atribuição de importância às variáveis e janelas temporais};
+        \node[box, fill=gray!15, below=of p5] (p6) {\textbf{Passo 6 -- Consolidação dos resultados}\\Tabelas $\cdot$ gráficos $\cdot$ análise comparativa dos cenários};
+
+        \draw[arr] (p1) -- (p2);
+        \draw[arr] (p2) -- (p3);
+        \draw[arr] (p3) -- (p4);
+        \draw[arr] (p4.south) -- (janela.north);
+        \draw[arr] (p4.south) -- (ruido.north);
+        \draw[arr] (p4.south) -- (faltantes.north);
+        \draw[arr] (p4.south) -- (hiper.north);
+        \draw[arr] (janela.south) -- (janela.south |- p5.north);
+        \draw[arr] (ruido.south) -- (ruido.south |- p5.north);
+        \draw[arr] (faltantes.south) -- (faltantes.south |- p5.north);
+        \draw[arr] (hiper.south) -- (hiper.south |- p5.north);
+        \draw[arr] (p5) -- (p6);
+
+        \coordinate (legAnchor) at ($(p6.south)+(0,-1.1cm)$);
+        \node[draw, fill=gray!15, minimum width=0.3cm, minimum height=0.3cm] at ($(legAnchor)+(-5.4cm,0)$) (leg1) {};
+        \node[font=\scriptsize, anchor=west] at ($(leg1.east)+(0.15cm,0)$) {Etapas estruturais};
+        \node[draw, fill=blue!12, minimum width=0.3cm, minimum height=0.3cm] at ($(legAnchor)+(0.4cm,0)$) (leg2) {};
+        \node[font=\scriptsize, anchor=west] at ($(leg2.east)+(0.15cm,0)$) {Modelo de referência};
+        \node[draw, fill=orange!15, minimum width=0.3cm, minimum height=0.3cm] at ($(legAnchor)+(-5.4cm,-0.55cm)$) (leg3) {};
+        \node[font=\scriptsize, anchor=west] at ($(leg3.east)+(0.15cm,0)$) {Perturbações (Passo 4)};
+        \node[draw, fill=green!12, minimum width=0.3cm, minimum height=0.3cm] at ($(legAnchor)+(0.4cm,-0.55cm)$) (leg4) {};
+        \node[font=\scriptsize, anchor=west] at ($(leg4.east)+(0.15cm,0)$) {Explicabilidade};
+    \end{tikzpicture}
+    \caption{Pipeline experimental proposto para análise de sensibilidade do modelo LSTM}
+    \label{fig:pipeline}
+\end{figure}
 
 \section{Detalhes de implementação}
-Explique escolhas tecnológicas, estruturas de dados e integrações. Inclua trechos de código relevantes ou pseudoexemplos se esclarecerem decisões de pesquisa.
+\label{subsec:funcionalidades}
+
+A implementação em Python utiliza Keras para a construção e o treinamento do modelo LSTM, scikit-learn para normalização e métricas, e pandas e NumPy para manipulação de dados (Seção~\ref{subsec:tecnologias}). Dado o volume dos microdados do PNI, a leitura é realizada em blocos (chunks), com filtragem dos registros antes da agregação. A normalização é feita por série e as janelas temporais são construídas por sliding window, respeitando a ordem cronológica na segmentação em treino, validação e teste. O treinamento conta com early stopping e fixação de sementes aleatórias, e a taxa de dropout é aplicada tanto às conexões de entrada quanto às recorrentes.
+
+As funcionalidades do pipeline, alinhadas aos objetivos do trabalho, são: treinar e avaliar um modelo LSTM de referência para previsão de demanda de imunobiológicos; executar experimentos de perturbação controlada sobre parâmetros de entrada e hiperparâmetros; mensurar a variabilidade das métricas de desempenho frente a cada perturbação; gerar, por meio de SHAP e LIME, a importância das variáveis e dos instantes temporais nas previsões; e consolidar os resultados em tabelas e gráficos que permitam comparar os cenários e identificar os fatores de maior influência.
 
 \section{Experimentos e cenários de teste}
-Descreva os cenários planejados, parâmetros testados e por que cada experimento está alinhado aos objetivos. Liste os conjuntos de dados, variações e número de repetições.
+
+Os cenários de teste correspondem às perturbações descritas na Seção~\ref{sec:proc_experimentais}, executadas um fator por vez a partir da configuração de referência: tamanho da janela temporal, injeção de ruído nas séries, proporção de valores faltantes e hiperparâmetros estruturais (número de camadas, número de unidades, taxa de aprendizado e dropout de 0,0; 0,1; 0,2; 0,3). Essa estratégia evita a explosão combinatória de cenários e mantém a interpretabilidade dos resultados. Os conjuntos de dados são as séries mensais dos quatro imunobiológicos (BCG, hepatite B, influenza e HPV) nos estados de São Paulo e da Bahia (Seção~\ref{sec:conjunto_dados}), e as execuções são repetidas com sementes fixadas, de modo a distinguir o efeito das perturbações do ruído decorrente da inicialização do modelo.
 
 \section{Coleta e tratamento de dados}
-Explique como os dados foram coletados (logs, sensores, APIs), armazenados e preparados (limpeza, normalização, anonimização). Registre ferramentas usadas no pré-processamento.
+\label{sec:conjunto_dados}
 
-\textit{O desenvolvimento só é pesquisa se estiver claramente ligado ao problema e à metodologia definida.}
+A base de dados adotada neste trabalho é composta pelos microdados de doses aplicadas do Programa Nacional de Imunizações, de natureza pública e aberta, disponibilizados pelo Ministério da Saúde por meio do portal OpenDataSUS e de sua API de dados abertos \cite{BrasilPNIDados}. A partir de 2020, cada registro da base corresponde a uma dose aplicada e contém, entre outras informações, a data da vacinação, o código do imunobiológico, o município e a unidade federativa do estabelecimento de saúde, características anonimizadas do vacinado, como idade e sexo, e campos de controle do registro, como sua situação e eventual exclusão. A base foi selecionada por sua disponibilidade aberta, por sua abrangência nacional e pela continuidade das séries, fatores que conferem validade e reprodutibilidade aos resultados obtidos, além de representar diretamente o consumo de imunobiológicos na ponta da cadeia de suprimentos.
 
-% ---------------------------------------------------------------
+Com o objetivo de concentrar a análise em um conjunto de séries representativo dos diferentes padrões de demanda discutidos na Seção~\ref{subsec:particularidades}, o recorte adotado contempla os quatro imunobiológicos apresentados na Tabela~\ref{tab:imunobiologicos}, aplicados em estabelecimentos de saúde dos estados de São Paulo e da Bahia.
+
+% TODO(Gabriel): conferir os códigos abaixo no dicionário de dados do PNI antes da entrega.
+\begin{table}[htb]
+    \centering
+    \caption{Imunobiológicos selecionados}
+    \label{tab:imunobiologicos}
+    \begin{tabularx}{\textwidth}{l|c|>{\raggedright\arraybackslash}X}
+        \toprule
+        \textbf{Imunobiológico} & \textbf{Código (\texttt{codigo\_vacina})} & \textbf{Padrão de demanda predominante} \\
+        \midrule
+        BCG & 15 & Rotina; dose única ao nascer \\
+        Hepatite B & 9 & Rotina ao nascer e esquemas para adolescentes e adultos não vacinados \\
+        Influenza & 33 & Sazonal; campanha anual \\
+        HPV & 67 & Faixa etária específica; mudança para dose única em 2024 \\
+        \bottomrule
+    \end{tabularx}
+    \legend{Fonte: Elaborado pelo autor (2026)}
+\end{table}
+
+O tratamento da base segue um encadeamento de etapas necessário para converter registros individuais em séries temporais. Inicialmente, são mantidos apenas os registros válidos, isto é, aqueles com situação final do documento (\texttt{st\_documento} igual a \texttt{final}) e sem data de exclusão (\texttt{data\_deletado\_rnds} nula), pertencentes aos códigos de imunobiológicos e às unidades federativas do recorte. Em seguida, a data de vacinação (\texttt{data\_vacina}) é truncada para o mês correspondente, e os registros são agrupados por município do estabelecimento (\texttt{codigo\_municipio\_estabelecimento}) e por imunobiológico (\texttt{codigo\_vacina}), sendo a contagem de registros em cada grupo adotada como variável-alvo, ou seja, o número de doses aplicadas $y_{m,v,t}$ no município $m$, para o imunobiológico $v$, no mês $t$. Meses sem registro são preenchidos com zero, de modo a garantir a continuidade exigida pela construção das janelas temporais, e cada série é normalizada individualmente, uma vez que a escala de doses aplicadas varia em ordens de grandeza entre municípios.
+
+A agregação por município do estabelecimento, e não por município de residência do vacinado, foi adotada porque o objetivo é prever a demanda no local onde as doses são efetivamente consumidas, isto é, onde o estoque precisa estar disponível. Pelo mesmo critério, optou-se pelo nível municipal em detrimento do nível de estabelecimento de saúde, no qual muitas unidades registram poucas aplicações mensais de determinados imunobiológicos, o que resultaria em séries esparsas e dominadas por valores nulos.
+
+A utilização dessa base impõe desafios que deverão ser tratados ao longo do desenvolvimento. O primeiro é o volume: por se tratar de registros individuais em escala nacional, os arquivos de microdados são extensos, o que exige leitura em blocos e filtragem antecipada. O segundo é a extensão das séries: considerando o período disponível de forma individualizada, a partir de 2020, cada série mensal contará com algumas dezenas de observações, o que motiva considerar o treinamento de um modelo global, ajustado conjuntamente sobre as séries dos diferentes municípios e imunobiológicos, em vez de modelos independentes por série. O terceiro diz respeito à qualidade dos registros, sujeitos a digitação tardia e a inconsistências \cite{Lopes2022}, o que exige uma etapa de validação dos dados, incluindo a verificação de meses com volumes anômalos e de municípios com séries predominantemente nulas, os quais poderão ser excluídos do conjunto de treinamento mediante critério previamente definido.
+
+Fonte dos dados: Ministério da Saúde, Doses Aplicadas pelo Programa Nacional de Imunizações (PNI), disponível por meio da API de dados abertos em \url{https://apidadosabertos.saude.gov.br/v1/}.
+
+Cabe registrar que a base inicialmente considerada para este trabalho, composta por registros de posicionamento de estoque de medicamentos da rede pública (BNAFAR/HÓRUS), foi descartada por não disponibilizar histórico acessível após a migração de sua plataforma, o que inviabilizaria a construção de séries temporais adequadas ao treinamento do modelo.
+
+Como base de reserva, a ser adotada caso limitações de acesso ou de qualidade inviabilizem o uso dos dados do PNI, considera-se um conjunto de dados público e aberto composto por registros históricos de vendas de medicamentos extraídos do sistema de ponto de venda (Point-of-Sale) -- tecnologia de caixa que pequenas empresas utilizam para aceitar pagamentos e controlar as vendas -- utilizado por uma rede farmacêutica. A base abrange seis anos de operação (2014--2019) e contempla aproximadamente 600 mil transações referentes a 57 medicamentos, organizados segundo o Sistema de Classificação Anatômico-Terapêutico-Químico (ATC) em oito categorias terapêuticas \cite{ATCDDD2026}, sendo disponibilizada em granularidades horária, diária, semanal e mensal. Nesse cenário, a análise seria concentrada nas categorias ATC associadas ao sistema respiratório, R03 (medicamentos para doenças obstrutivas das vias aéreas) e R06 (anti-histamínicos de uso sistêmico), preservando integralmente o pipeline experimental descrito na Seção~\ref{sec:solucao}.
+
+Fonte dos dados: Pharma Sales Data, disponibilizado na plataforma Kaggle \cite{Zdravkovic2020}.
+
+% ===============================================================
 % RESULTADOS
-% ---------------------------------------------------------------
+% ===============================================================
 \chapter{Resultados e Análise}
 
 \section{Apresentação dos resultados}
@@ -246,9 +726,9 @@ Relacione os resultados aos objetivos e à hipótese, explicitando se o critéri
 
 \textit{Resultados devem ser analisados, não apenas exibidos.}
 
-% ---------------------------------------------------------------
+% ===============================================================
 % CONCLUSÃO
-% ---------------------------------------------------------------
+% ===============================================================
 \chapter{Conclusão}
 
 \section{Retomada do problema e dos objetivos}
@@ -260,9 +740,9 @@ Explique o que a pesquisa trouxe de novo.
 \section{Limitações e trabalhos futuros}
 Liste limites e sugira próximos passos coerentes.
 
-% ---------------------------------------------------------------
+% ===============================================================
 % OBSERVAÇÕES DO AUTOR
-% ---------------------------------------------------------------
+% ===============================================================
 \chapter*{Observações importantes}
 \addcontentsline{toc}{chapter}{Observações importantes}
 
@@ -276,6 +756,8 @@ Para graduação, Wazlawick aceita trabalhos aplicados desde que:
 
 \postextual
 
+% TODO(Gabriel): o TCC1 usava \bibliography{bibliografia}; o template do TCC2 usa
+% bibliografia_tcc2. Garanta que este .bib contenha todas as chaves citadas acima.
 \bibliography{bibliografia_tcc2}
 
 \end{document}
